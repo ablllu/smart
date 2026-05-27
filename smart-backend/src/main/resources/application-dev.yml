@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: smart-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/smart_backend?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+
+server:
+  port: 8080
+
+jwt:
+  secret: smartYbackendYjwtYsecretYkeyYstringY2024Yv1
+  expire: 86400000 # 1 day
+
+upload:
+  path: ${user.dir}/uploads/
+
+logging:
+  level:
+    com.example.smartbackend: debug
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0

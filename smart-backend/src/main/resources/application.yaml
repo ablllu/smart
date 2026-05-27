@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: dev
+  # 忽略返回给前端的VO中的null属性
+  jackson:
+    default-property-inclusion: non_null
