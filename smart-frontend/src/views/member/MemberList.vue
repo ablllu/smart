@@ -1,7 +1,8 @@
 <template>
   <div>
-    <!-- 搜索栏 -->
-    <el-card style="margin-bottom:16px">
+    <h2 class="page-title">会员管理</h2>
+
+    <div class="search-bar">
       <el-form :model="query" inline>
         <el-form-item label="用户名">
           <el-input v-model="query.username" placeholder="请输入" clearable />
@@ -20,10 +21,9 @@
           <el-button @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
 
-    <!-- 表格 -->
-    <el-card>
+    <div class="table-card">
       <el-table :data="tableData" v-loading="loading" border stripe>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="username" label="用户名" width="140" />
@@ -39,9 +39,7 @@
         </el-table-column>
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
-            <el-switch
-              :model-value="row.status === 1"
-              @change="(val: boolean) => handleStatusChange(row.id, val ? 1 : 0)" />
+            <el-switch :model-value="row.status === 1" @change="(val: boolean) => handleStatusChange(row.id, val ? 1 : 0)" />
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="180" />
@@ -52,19 +50,15 @@
         </el-table-column>
       </el-table>
 
-      <div style="margin-top:16px;display:flex;justify-content:flex-end">
+      <div class="pagination">
         <el-pagination
-          v-model:current-page="query.pageNum"
-          v-model:page-size="query.pageSize"
-          :total="total"
-          :page-sizes="[10, 20, 50]"
+          v-model:current-page="query.pageNum" v-model:page-size="query.pageSize"
+          :total="total" :page-sizes="[10, 20, 50]"
           layout="total, sizes, prev, pager, next"
-          @size-change="fetchData"
-          @current-change="fetchData" />
+          @size-change="fetchData" @current-change="fetchData" />
       </div>
-    </el-card>
+    </div>
 
-    <!-- 详情抽屉 -->
     <el-drawer v-model="drawerVisible" title="会员详情" size="500px">
       <template v-if="detail">
         <el-descriptions :column="2" border>
@@ -76,9 +70,7 @@
           <el-descriptions-item label="等级">{{ MemberLevelMap[detail.memberLevel] }}</el-descriptions-item>
           <el-descriptions-item label="生日">{{ detail.birthday }}</el-descriptions-item>
           <el-descriptions-item label="状态">
-            <el-tag :type="detail.status === 1 ? 'success' : 'danger'">
-              {{ detail.status === 1 ? '启用' : '禁用' }}
-            </el-tag>
+            <el-tag :type="detail.status === 1 ? 'success' : 'danger'">{{ detail.status === 1 ? '启用' : '禁用' }}</el-tag>
           </el-descriptions-item>
         </el-descriptions>
 
@@ -87,9 +79,7 @@
           <el-table-column prop="name" label="收件人" width="100" />
           <el-table-column prop="phone" label="电话" width="140" />
           <el-table-column label="地址">
-            <template #default="{ row: addr }">
-              {{ addr.province }}{{ addr.city }}{{ addr.district }}{{ addr.detail }}
-            </template>
+            <template #default="{ row: addr }">{{ addr.province }}{{ addr.city }}{{ addr.district }}{{ addr.detail }}</template>
           </el-table-column>
           <el-table-column label="默认" width="80">
             <template #default="{ row: addr }">
@@ -120,32 +110,13 @@ onMounted(() => fetchData())
 async function fetchData() {
   loading.value = true
   try {
-    const res = await memberApi.getPage({
-      pageNum: query.pageNum,
-      pageSize: query.pageSize,
-      username: query.username || undefined,
-      phone: query.phone || undefined,
-      status: query.status
-    })
-    tableData.value = res.records
-    total.value = res.total
-  } finally {
-    loading.value = false
-  }
+    const res = await memberApi.getPage({ pageNum: query.pageNum, pageSize: query.pageSize, username: query.username || undefined, phone: query.phone || undefined, status: query.status })
+    tableData.value = res.records; total.value = res.total
+  } finally { loading.value = false }
 }
 
-function handleSearch() {
-  query.pageNum = 1
-  fetchData()
-}
-
-function handleReset() {
-  query.username = ''
-  query.phone = ''
-  query.status = undefined
-  query.pageNum = 1
-  fetchData()
-}
+function handleSearch() { query.pageNum = 1; fetchData() }
+function handleReset() { query.username = ''; query.phone = ''; query.status = undefined; query.pageNum = 1; fetchData() }
 
 async function handleStatusChange(id: number, status: number) {
   await memberApi.updateStatus(id, status)
@@ -153,8 +124,12 @@ async function handleStatusChange(id: number, status: number) {
   fetchData()
 }
 
-async function showDetail(id: number) {
-  detail.value = await memberApi.getById(id)
-  drawerVisible.value = true
-}
+async function showDetail(id: number) { detail.value = await memberApi.getById(id); drawerVisible.value = true }
 </script>
+
+<style scoped>
+.page-title { font-size: 20px; font-weight: 600; color: #333; margin: 0 0 20px; }
+.search-bar { background: #fff; border-radius: 10px; padding: 20px 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.table-card { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.pagination { margin-top: 20px; display: flex; justify-content: flex-end; }
+</style>

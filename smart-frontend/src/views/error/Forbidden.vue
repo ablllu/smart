@@ -1,6 +1,6 @@
 <template>
   <div class="error-page">
-    <h1>403</h1>
+    <div class="error-code">403</div>
     <p>没有权限访问此页面</p>
     <el-button type="primary" @click="$router.push('/dashboard')">返回首页</el-button>
   </div>
@@ -8,20 +8,24 @@
 
 <style scoped>
 .error-page {
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: #555;
 }
-.error-page h1 {
-  font-size: 80px;
-  color: #909399;
-  margin: 0;
+.error-code {
+  font-size: 100px;
+  font-weight: 700;
+  color: #f56c6c;
+  line-height: 1;
+  margin-bottom: 8px;
+  opacity: 0.8;
 }
 .error-page p {
-  font-size: 18px;
-  color: #606266;
-  margin: 16px 0 24px;
+  font-size: 16px;
+  color: #999;
+  margin: 0 0 24px;
 }
 </style>

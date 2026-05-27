@@ -1,23 +1,19 @@
 <template>
-
   <el-container class="layout-container">
-
-    <!-- 左侧菜单 -->
+    <!-- 侧栏 -->
     <el-aside width="220px" class="aside">
-
       <div class="logo">
-
+        <span class="logo-dot"></span>
         Smart Admin
-
       </div>
 
       <el-menu
         :default-active="route.path"
-        background-color="#304156"
-        text-color="#bfcbd9"
-        active-text-color="#409EFF"
+        background-color="transparent"
+        text-color="rgba(255,255,255,0.65)"
+        active-text-color="#fff"
         router
-        style="border-right:none"
+        class="side-menu"
       >
         <el-menu-item index="/dashboard">
           <el-icon><Odometer /></el-icon>
@@ -25,7 +21,6 @@
         </el-menu-item>
 
         <template v-for="item in menuStore.menuTree[0]?.children || menuStore.menuTree" :key="item.id">
-          <!-- type=1 有子节点 → 目录，渲染为子菜单 -->
           <el-sub-menu v-if="item.type === 1 && item.children?.length" :index="item.path">
             <template #title>
               <span>{{ item.name }}</span>
@@ -38,7 +33,6 @@
               {{ child.name }}
             </el-menu-item>
           </el-sub-menu>
-          <!-- type=1/2 有 component → 直接菜单项 -->
           <el-menu-item
             v-else-if="item.type === 1 && item.component"
             :index="item.path"
@@ -47,50 +41,34 @@
           </el-menu-item>
         </template>
       </el-menu>
-
     </el-aside>
 
-    <!-- 右侧 -->
-    <el-container>
-
-      <!-- 顶部 -->
+    <!-- 右侧主体 -->
+    <el-container class="main-container">
+      <!-- 顶栏 -->
       <el-header class="header">
-
-        <div></div>
-
-        <div class="right-box">
-
-          <span class="nickname">
-            管理员
-          </span>
-
-          <el-button
-            type="danger"
-            text
-            @click="logout"
-          >
-            退出登录
-          </el-button>
-
+        <div class="header-left">
+          <span class="greeting">欢迎回来</span>
         </div>
-
+        <div class="header-right">
+          <span class="nickname">管理员</span>
+          <el-button class="logout-btn" text @click="logout">退出登录</el-button>
+        </div>
       </el-header>
 
-      <!-- 内容区 -->
-      <el-main class="main">
-
-        <router-view />
-
+      <!-- 内容 -->
+      <el-main class="main-content">
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </el-main>
-
     </el-container>
-
   </el-container>
-
 </template>
 
 <script setup lang="ts">
-
 import { useRouter, useRoute } from 'vue-router'
 import { useMenuStore } from '../stores/menu'
 import * as authApi from '../api/auth'
@@ -100,73 +78,93 @@ const route = useRoute()
 const menuStore = useMenuStore()
 
 async function logout() {
-  try {
-    await authApi.logout()
-  } finally {
+  try { await authApi.logout() } finally {
     localStorage.removeItem('token')
     router.push('/login')
   }
 }
-
 </script>
 
 <style scoped>
-
-.layout-container {
-
-  height: 100vh;
-}
+.layout-container { height: 100vh; }
 
 .aside {
-
-  background: #304156;
+  background: linear-gradient(180deg, #4a3f3a 0%, #5a4e46 100%);
+  overflow-y: auto;
 }
 
 .logo {
-
   height: 60px;
-
-  color: white;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  font-size: 20px;
-
-  font-weight: bold;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
+.logo-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #e85d3a;
+}
+
+.side-menu {
+  border-right: none;
+  padding-top: 8px;
+}
+.side-menu :deep(.el-menu-item) {
+  margin: 2px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 400;
+}
+/* 一级菜单项（非子菜单中的）加粗 */
+.side-menu > :deep(.el-menu-item) {
+  font-size: 15px;
+  font-weight: 600;
+}
+.side-menu :deep(.el-menu-item:hover) {
+  background: rgba(255,255,255,0.08);
+}
+.side-menu :deep(.el-menu-item.is-active) {
+  background: #409eff;
+  color: #fff;
+}
+.side-menu :deep(.el-sub-menu .el-sub-menu__title) {
+  margin: 2px 8px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.side-menu :deep(.el-sub-menu .el-sub-menu__title:hover) {
+  background: rgba(255,255,255,0.08);
+}
+.side-menu :deep(.el-sub-menu .el-menu-item) {
+  padding-left: 56px !important;
+}
+
+.main-container { background: #faf7f4; }
 
 .header {
-
-  background: white;
-
-  border-bottom: 1px solid #eee;
-
+  background: #fff;
+  border-bottom: 1px solid #f0ebe4;
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
+.header-left { display: flex; align-items: center; }
+.greeting { color: #999; font-size: 14px; }
+.header-right { display: flex; align-items: center; gap: 16px; }
+.nickname { color: #555; font-size: 14px; }
+.logout-btn { color: #999; }
+.logout-btn:hover { color: #f56c6c; }
 
-.right-box {
-
-  display: flex;
-
-  align-items: center;
+.main-content {
+  padding: 24px;
+  min-height: 0;
 }
-
-.nickname {
-
-  margin-right: 10px;
-}
-
-.main {
-
-  background: #f5f7fa;
-}
-
 </style>

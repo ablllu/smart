@@ -1,20 +1,17 @@
 <template>
   <div>
-    <!-- 搜索栏 -->
-    <el-card style="margin-bottom:16px">
+    <h2 class="page-title">商品管理</h2>
+
+    <div class="search-bar">
       <el-form :model="query" inline>
         <el-form-item label="商品名称">
           <el-input v-model="query.name" placeholder="请输入" clearable />
         </el-form-item>
         <el-form-item label="分类">
           <el-tree-select
-            v-model="query.categoryId"
-            :data="categoryTree"
+            v-model="query.categoryId" :data="categoryTree"
             :props="{ value: 'id', label: 'name', children: 'children' }"
-            placeholder="全部分类"
-            check-strictly
-            clearable
-            style="width:180px"
+            placeholder="全部分类" check-strictly clearable style="width:180px"
           />
         </el-form-item>
         <el-form-item label="状态">
@@ -28,11 +25,10 @@
           <el-button @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
 
-    <!-- 表格 -->
-    <el-card>
-      <div style="margin-bottom:16px">
+    <div class="table-card">
+      <div class="toolbar">
         <el-button type="primary" @click="router.push('/product/add')">新增商品</el-button>
       </div>
 
@@ -43,13 +39,8 @@
         <el-table-column prop="brand" label="品牌" width="120" />
         <el-table-column label="主图" width="100">
           <template #default="{ row }">
-            <el-image
-              v-if="row.mainImage"
-              :src="row.mainImage"
-              :preview-src-list="[row.mainImage]"
-              style="width:50px;height:50px"
-              fit="cover"
-            />
+            <el-image v-if="row.mainImage" :src="row.mainImage" :preview-src-list="[row.mainImage]"
+              style="width:50px;height:50px" fit="cover" />
           </template>
         </el-table-column>
         <el-table-column label="状态" width="100">
@@ -63,9 +54,7 @@
         <el-table-column prop="createTime" label="创建时间" width="170" />
         <el-table-column label="操作" width="260" fixed="right">
           <template #default="{ row }">
-            <el-button
-              :type="row.status === 1 ? 'warning' : 'success'"
-              size="small"
+            <el-button :type="row.status === 1 ? 'warning' : 'success'" size="small"
               @click="handleToggleStatus(row)">
               {{ row.status === 1 ? '下架' : '上架' }}
             </el-button>
@@ -76,18 +65,15 @@
         </el-table-column>
       </el-table>
 
-      <div style="margin-top:16px;display:flex;justify-content:flex-end">
+      <div class="pagination">
         <el-pagination
-          v-model:current-page="query.pageNum"
-          v-model:page-size="query.pageSize"
-          :total="total"
-          :page-sizes="[10, 20, 50]"
+          v-model:current-page="query.pageNum" v-model:page-size="query.pageSize"
+          :total="total" :page-sizes="[10, 20, 50]"
           layout="total, sizes, prev, pager, next"
-          @size-change="fetchData"
-          @current-change="fetchData"
+          @size-change="fetchData" @current-change="fetchData"
         />
       </div>
-    </el-card>
+    </div>
 
     <SpuDetailDrawer ref="detailRef" />
   </div>
@@ -109,51 +95,25 @@ const total = ref(0)
 const loading = ref(false)
 const categoryTree = ref<any[]>([])
 
-onMounted(() => {
-  fetchData()
-  loadCategoryTree()
-})
+onMounted(() => { fetchData(); loadCategoryTree() })
 
 async function fetchData() {
   loading.value = true
   try {
-    const res = await spuApi.getPage({
-      pageNum: query.pageNum,
-      pageSize: query.pageSize,
-      name: query.name || undefined,
-      categoryId: query.categoryId,
-      status: query.status
-    })
-    tableData.value = res.records
-    total.value = res.total
-  } finally {
-    loading.value = false
-  }
+    const res = await spuApi.getPage({ pageNum: query.pageNum, pageSize: query.pageSize, name: query.name || undefined, categoryId: query.categoryId, status: query.status })
+    tableData.value = res.records; total.value = res.total
+  } finally { loading.value = false }
 }
 
-async function loadCategoryTree() {
-  categoryTree.value = await categoryApi.getTree()
-}
-
-function handleSearch() {
-  query.pageNum = 1
-  fetchData()
-}
-
-function handleReset() {
-  query.name = ''
-  query.categoryId = undefined
-  query.status = undefined
-  query.pageNum = 1
-  fetchData()
-}
+async function loadCategoryTree() { categoryTree.value = await categoryApi.getTree() }
+function handleSearch() { query.pageNum = 1; fetchData() }
+function handleReset() { query.name = ''; query.categoryId = undefined; query.status = undefined; query.pageNum = 1; fetchData() }
 
 async function handleToggleStatus(row: any) {
   const newStatus = row.status === 1 ? 0 : 1
-  const label = newStatus === 1 ? '上架' : '下架'
-  await ElMessageBox.confirm(`确认${label}商品【${row.name}】吗？`, '提示', { type: 'warning' })
+  await ElMessageBox.confirm(`确认${newStatus ? '上架' : '下架'}商品【${row.name}】吗？`, '提示', { type: 'warning' })
   await spuApi.updateStatus(row.id, newStatus)
-  ElMessage.success(`已${label}`)
+  ElMessage.success(`已${newStatus ? '上架' : '下架'}`)
   fetchData()
 }
 
@@ -164,7 +124,13 @@ async function handleDelete(row: any) {
   fetchData()
 }
 
-function showDetail(id: number) {
-  detailRef.value.open(id)
-}
+function showDetail(id: number) { detailRef.value.open(id) }
 </script>
+
+<style scoped>
+.page-title { font-size: 20px; font-weight: 600; color: #333; margin: 0 0 20px; }
+.search-bar { background: #fff; border-radius: 10px; padding: 20px 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.table-card { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.toolbar { margin-bottom: 16px; }
+.pagination { margin-top: 20px; display: flex; justify-content: flex-end; }
+</style>

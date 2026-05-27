@@ -2,7 +2,7 @@
   <div>
     <el-page-header @back="$router.back()" :title="isEdit ? '编辑商品' : '新增商品'" />
 
-    <el-card style="margin-top:16px">
+    <div class="form-card" style="margin-top:16px">
       <el-tabs v-model="activeTab">
         <!-- 基本信息 -->
         <el-tab-pane label="基本信息" name="basic">
@@ -73,7 +73,7 @@
         <el-button type="primary" @click="handleSubmit" :loading="submitting">保存</el-button>
         <el-button @click="$router.back()">取消</el-button>
       </div>
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -162,3 +162,12 @@ async function handleSubmit() {
   }
 }
 </script>
+
+<style scoped>
+.form-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+</style>
