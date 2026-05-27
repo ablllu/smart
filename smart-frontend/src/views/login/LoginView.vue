@@ -27,7 +27,7 @@ import { ElMessage } from 'element-plus'
 import * as authApi from '../../api/auth'
 
 const router = useRouter()
-const form = reactive({ username: 'admin', password: '123456' })
+const form = reactive({ username: '', password: '' })
 const loading = ref(false)
 async function handleLogin() {
   if(!form.username || !form.password) {
