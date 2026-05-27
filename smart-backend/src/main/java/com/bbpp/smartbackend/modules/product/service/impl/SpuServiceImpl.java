@@ -6,6 +6,7 @@ import com.bbpp.smartbackend.common.exception.BusinessException;
 import com.bbpp.smartbackend.common.page.PageResult;
 import com.bbpp.smartbackend.modules.product.dto.SpuCreateDTO;
 import com.bbpp.smartbackend.modules.product.dto.SpuUpdateDTO;
+import com.bbpp.smartbackend.modules.product.service.CategoryService;
 import com.bbpp.smartbackend.modules.product.vo.SpuDetailVO;
 import com.bbpp.smartbackend.modules.product.vo.SpuVO;
 import com.bbpp.smartbackend.modules.product.dto.SpuPageDTO;
@@ -33,11 +34,14 @@ public class SpuServiceImpl implements SpuService {
     private final SkuMapper skuMapper;
     private final CategoryMapper categoryMapper;
     private final ObjectMapper objectMapper= new ObjectMapper();
+    // 依赖categoryService
+    private final CategoryService categoryService;
 
-    public SpuServiceImpl(SpuMapper spuMapper, SkuMapper skuMapper, CategoryMapper categoryMapper) {
+    public SpuServiceImpl(SpuMapper spuMapper, SkuMapper skuMapper, CategoryMapper categoryMapper, CategoryService categoryService) {
         this.spuMapper = spuMapper;
         this.skuMapper = skuMapper;
         this.categoryMapper = categoryMapper;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -51,11 +55,10 @@ public class SpuServiceImpl implements SpuService {
                 Spu::getName,
                 dto.getName()
         );
-        wrapper.eq(
-                dto.getCategoryId() != null,
-                Spu::getCategoryId,
-                dto.getCategoryId()
-        );
+        if(dto.getCategoryId() != null) {
+            List<Long> categoryIds = categoryService.getDescendantIds(dto.getCategoryId());
+            wrapper.in(Spu::getCategoryId, categoryIds);
+        }
         wrapper.eq(
                 dto.getStatus() != null,
                 Spu::getStatus,

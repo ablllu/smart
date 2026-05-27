@@ -99,4 +99,25 @@ public class CategoryServiceImpl implements CategoryService {
         }
         categoryMapper.deleteById(id);
     }
+
+    @Override
+    public List<Long> getDescendantIds(Long parentId) {
+        // 1.查询所有分类
+        List<Category> all = categoryMapper.selectList(null);
+
+        //递归手机目标分类及其所有子孙ID
+        List<Long> ids = new ArrayList<>();
+        collectDescendants(all, parentId, ids);
+        ids.add(parentId); //把自己也加进去
+        return ids;
+    }
+
+    private void collectDescendants(List<Category> all, Long parentId, List<Long> ids) {
+        for(Category c : all) {
+            if(c.getParentId().equals(parentId)) {
+                ids.add(c.getId());
+                collectDescendants(all, c.getId(), ids);
+            }
+        }
+    }
 }

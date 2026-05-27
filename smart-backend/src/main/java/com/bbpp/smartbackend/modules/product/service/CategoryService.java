@@ -19,4 +19,7 @@ public interface CategoryService {
 
     // 删除
     void delete(Long id);
+
+    // 获取所有后代节点id列表
+    List<Long> getDescendantIds(Long parentId);
 }

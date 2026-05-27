@@ -17,3 +17,8 @@ export const OrderStatusMap: Record<number, { label: string; type: string }> = {
 export const PayTypeMap: Record<number, string> = {
   1: '微信', 2: '支付宝', 3: '银行卡'
 }
+
+export const ProductStatusMap: Record<number, { label: string; type: string }> = {
+  0: { label: '下架', type: 'info' },
+  1: { label: '上架', type: 'success' }
+}
