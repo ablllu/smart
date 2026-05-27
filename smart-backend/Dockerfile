@@ -12,4 +12,4 @@ EXPOSE 8080
 
 # 启动命令
 #ENTRYPOINT ["java","-jar","/app/smart-backend-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"] 激活生产环境
-ENTRYPOINT ["java","-jar","/app/smart-backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-Xmx512m","-Xms256m","-jar","/app/smart-backend-0.0.1-SNAPSHOT.jar"]
