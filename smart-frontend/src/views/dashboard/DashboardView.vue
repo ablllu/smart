@@ -98,4 +98,35 @@ onMounted(async () => {
   color: #2c2c2c;
   line-height: 1;
 }
+
+@media (max-width: 992px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px 14px;
+  }
+
+  .stat-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  .page-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+}
 </style>

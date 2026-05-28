@@ -19,4 +19,6 @@ public class MenuVO {
     private Integer type;
 
     private List<MenuVO> children;
+
+    private Integer sortNum;
 }

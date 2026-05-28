@@ -1,9 +1,13 @@
 package com.bbpp.smartbackend.modules.member.controller;
 
 
+import com.bbpp.smartbackend.common.audit.AuditLogAnnotation;
+import com.bbpp.smartbackend.common.idempotent.Idempotent;
+import com.bbpp.smartbackend.common.log.OperationLogAnnotation;
 import com.bbpp.smartbackend.common.page.PageResult;
 import com.bbpp.smartbackend.common.result.Result;
 import com.bbpp.smartbackend.modules.member.dto.MemberPageDTO;
+import com.bbpp.smartbackend.modules.member.entity.Member;
 import com.bbpp.smartbackend.modules.member.service.MemberService;
 import com.bbpp.smartbackend.modules.member.vo.MemberDetailVO;
 import com.bbpp.smartbackend.modules.member.vo.MemberVO;
@@ -35,7 +39,10 @@ public class MemberController {
         return Result.success(memberService.detail(id));
     }
 
+    @Idempotent(timeout = 5)
     @Operation(summary = "启用/禁用会员")
+    @OperationLogAnnotation(value = "启用/禁用会员")
+    @AuditLogAnnotation(module = "会员管理", operation = "启用/禁用会员", entityClass = Member.class)
     @PutMapping("/{id}/status")
     public Result<?> updateStatus(@PathVariable Long id, Integer
             status) {

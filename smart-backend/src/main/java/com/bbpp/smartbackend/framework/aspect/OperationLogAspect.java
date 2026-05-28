@@ -45,7 +45,17 @@ public class OperationLogAspect {
 
         log.setPath(request.getRequestURI());
 
-        log.setIp(request.getRemoteAddr());
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty()) {
+            ip = request.getHeader("X-Real-IP");
+        }
+        if (ip == null || ip.isEmpty()) {
+            ip = request.getRemoteAddr();
+        }
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
+        log.setIp(ip);
 
         operationLogMapper.insert(log);
     }

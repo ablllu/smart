@@ -102,3 +102,47 @@ html, body, #app {
 .fade-leave-to {
   opacity: 0;
 }
+
+/* ===== 移动端全局适配 ===== */
+@media (max-width: 768px) {
+  /* 表格横向滚动 */
+  .el-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 内联表单换行 */
+  .el-form--inline .el-form-item {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+
+  /* 工具栏按钮换行 */
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* 卡片减少内边距 */
+  .search-bar,
+  .table-card {
+    padding: 14px 12px !important;
+    border-radius: 8px !important;
+  }
+
+  /* 分页紧凑 */
+  .el-pagination {
+    justify-content: center;
+  }
+  .el-pagination .el-pagination__total {
+    display: none;
+  }
+
+  /* 页面标题缩小 */
+  .page-title {
+    font-size: 16px !important;
+    margin-bottom: 14px !important;
+  }
+}

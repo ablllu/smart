@@ -11,6 +11,7 @@ import com.bbpp.smartbackend.modules.menu.vo.MenuVO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -35,6 +36,8 @@ public class MenuServiceImpl implements MenuService {
         if(menuIds != null && !menuIds.isEmpty()) {
             menus = menuMapper.selectBatchIds(menuIds);
         }
+
+        menus.sort(Comparator.comparingInt(Menu::getSortNum));
 
         return buildTree(menus, 0L);
     }
@@ -68,6 +71,8 @@ public class MenuServiceImpl implements MenuService {
                 );
 
                 list.add(vo);
+
+                vo.setSortNum(menu.getSortNum());
             }
         }
 

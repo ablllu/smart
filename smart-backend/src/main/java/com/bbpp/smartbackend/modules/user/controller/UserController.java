@@ -52,6 +52,8 @@ public class UserController {
 
     @Idempotent(timeout = 5) // 幂等
     @Operation(summary = "创建用户")
+    @OperationLogAnnotation(value = "创建用户")
+    @AuditLogAnnotation(module = "用户管理", operation = "创建用户")
     @PostMapping("/create")
     public Result<?> createUser(@Valid @RequestBody UserCreateDTO dto) {
         userService.createUser(dto);
@@ -74,7 +76,9 @@ public class UserController {
         return Result.success(userService.getUserById(id));
     }
 
-    @AuditLogAnnotation(module = "用户管理", operation = "更新用户")
+    @Idempotent(timeout = 5)
+    @OperationLogAnnotation(value = "更新用户")
+    @AuditLogAnnotation(module = "用户管理", operation = "更新用户", entityClass = User.class)
     @Operation(summary = "更新用户")
     @PutMapping("/{id}")
     public Result<?> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
@@ -84,8 +88,10 @@ public class UserController {
         return Result.success();
     }
 
+    @Idempotent(timeout = 5)
     @Operation(summary = "删除用户")
     @OperationLogAnnotation(value = "删除用户") // 记录操作日志
+    @AuditLogAnnotation(module = "用户管理", operation = "删除用户", entityClass = User.class)
     @RequireRole("ADMIN")
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
@@ -148,7 +154,10 @@ public class UserController {
         );
     }
 
+    @Idempotent(timeout = 5)
     @Operation(summary = "导入用户")
+    @OperationLogAnnotation(value = "导入用户")
+    @AuditLogAnnotation(module = "用户管理", operation = "导入用户")
     @PostMapping("/import/excel")
     public Result<?> importExcel(
             @RequestParam("file") MultipartFile file

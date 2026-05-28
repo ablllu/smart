@@ -11,4 +11,6 @@ public @interface AuditLogAnnotation {
     String module();
 
     String operation();
+
+    Class<?> entityClass() default Void.class;
 }

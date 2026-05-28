@@ -1,10 +1,14 @@
 package com.bbpp.smartbackend.modules.product.controller;
 
+import com.bbpp.smartbackend.common.audit.AuditLogAnnotation;
+import com.bbpp.smartbackend.common.idempotent.Idempotent;
+import com.bbpp.smartbackend.common.log.OperationLogAnnotation;
 import com.bbpp.smartbackend.common.page.PageResult;
 import com.bbpp.smartbackend.common.result.Result;
 import com.bbpp.smartbackend.modules.product.dto.SpuCreateDTO;
 import com.bbpp.smartbackend.modules.product.dto.SpuPageDTO;
 import com.bbpp.smartbackend.modules.product.dto.SpuUpdateDTO;
+import com.bbpp.smartbackend.modules.product.entity.Spu;
 import com.bbpp.smartbackend.modules.product.service.SpuService;
 import com.bbpp.smartbackend.modules.product.vo.SpuDetailVO;
 import com.bbpp.smartbackend.modules.product.vo.SpuVO;
@@ -39,7 +43,10 @@ public class SpuController {
         return Result.success(spuService.detail(id));
     }
 
+    @Idempotent(timeout = 5)
     @Operation(summary = "商品创建")
+    @OperationLogAnnotation(value = "创建商品")
+    @AuditLogAnnotation(module = "商品管理", operation = "创建商品")
     @PostMapping
     public Result<?> create(@Valid @RequestBody SpuCreateDTO dto) {
 
@@ -48,7 +55,10 @@ public class SpuController {
         return Result.success();
     }
 
+    @Idempotent(timeout = 5)
     @Operation(summary = "商品修改")
+    @OperationLogAnnotation(value = "修改商品")
+    @AuditLogAnnotation(module = "商品管理", operation = "修改商品", entityClass = Spu.class)
     @PutMapping("/{id}")
     public Result<?> update(@PathVariable Long id, @Valid @RequestBody SpuUpdateDTO dto) {
 
@@ -57,7 +67,10 @@ public class SpuController {
         return Result.success();
     }
 
+    @Idempotent(timeout = 5)
     @Operation(summary = "商品上下架")
+    @OperationLogAnnotation(value = "商品上下架")
+    @AuditLogAnnotation(module = "商品管理", operation = "商品上下架", entityClass = Spu.class)
     @PutMapping("/{id}/status")
     public Result<?> updateStatus(@PathVariable Long id, @RequestParam Integer status) {
 
@@ -66,7 +79,10 @@ public class SpuController {
         return Result.success();
     }
 
+    @Idempotent(timeout = 5)
     @Operation(summary = "商品删除")
+    @OperationLogAnnotation(value = "删除商品")
+    @AuditLogAnnotation(module = "商品管理", operation = "删除商品", entityClass = Spu.class)
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
         spuService.delete(id);

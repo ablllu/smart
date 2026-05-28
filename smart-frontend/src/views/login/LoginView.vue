@@ -49,6 +49,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
 import * as authApi from '../../api/auth'
+import { loadDynamicRoutes } from '../../router'
 
 const router = useRouter()
 const form = reactive({ username: '', password: '' })
@@ -63,8 +64,10 @@ async function handleLogin() {
   try {
     const result = await authApi.login(form)
     localStorage.setItem('token', result.token)
+    // 先加载动态路由再导航，避免 beforeEach 中异步加载+重定向导致白屏
+    await loadDynamicRoutes()
     ElMessage.success(`欢迎，${result.nickname || result.username}！`)
-    router.push('/dashboard')
+    await router.push('/dashboard')
   } catch {
     // 错误已由拦截器处理
   } finally {
@@ -83,6 +86,7 @@ async function handleLogin() {
   background-size: 400% 400%;
   animation: flowBg 12s ease infinite;
   overflow: hidden;
+  padding: 16px;
 }
 
 @keyframes flowBg {
@@ -94,6 +98,7 @@ async function handleLogin() {
 .login-card {
   display: flex;
   width: 820px;
+  max-width: 100%;
   min-height: 480px;
   border-radius: 12px;
   overflow: hidden;
@@ -204,5 +209,39 @@ async function handleLogin() {
 }
 .form-panel :deep(.el-input .el-input__wrapper) {
   box-shadow: none !important;
+}
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+  .login-card {
+    flex-direction: column;
+    width: 100%;
+    min-height: auto;
+  }
+
+  .banner {
+    flex: 0 0 auto;
+    padding: 36px 20px;
+  }
+
+  .banner-content h1 {
+    font-size: 26px;
+    letter-spacing: 2px;
+  }
+
+  .banner-content p {
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .form-panel {
+    padding: 32px 24px;
+    gap: 16px;
+  }
+
+  .form-panel h2 {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
 }
 </style>
