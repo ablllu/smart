@@ -11,7 +11,7 @@
           <el-tree-select
             v-model="query.categoryId" :data="categoryTree"
             :props="{ value: 'id', label: 'name', children: 'children' }"
-            placeholder="全部分类" check-strictly clearable style="width:180px"
+            placeholder="全部分类" check-strictly clearable style="width:100%"
           />
         </el-form-item>
         <el-form-item label="状态">
