@@ -11,7 +11,7 @@
  Target Server Version : 80045 (8.0.45)
  File Encoding         : 65001
 
- Date: 27/05/2026 12:38:30
+ Date: 28/05/2026 20:01:14
 */
 
 SET NAMES utf8mb4;
@@ -877,25 +877,19 @@ CREATE TABLE `sys_audit_log`  (
   `new_data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2059464181306019842 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2059968118308077570 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_audit_log
 -- ----------------------------
-INSERT INTO `sys_audit_log` VALUES (2057334828208148481, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[2056695331091046402,{\"nickname\":\"张晋秋\",\"phone\":\"13733539663\",\"email\":\"zhangjinqiu@email\"}]', '2026-05-21 13:37:01');
-INSERT INTO `sys_audit_log` VALUES (2059179695943131138, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2059178041382477826\",{\"nickname\":\"老六\"}]', '2026-05-26 15:47:51');
-INSERT INTO `sys_audit_log` VALUES (2059179911274504193, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2059178041382477826\",{\"nickname\":\"老六\"}]', '2026-05-26 15:48:43');
-INSERT INTO `sys_audit_log` VALUES (2059180483734085634, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2056695331091046402\",{\"nickname\":\"张晋秋\",\"phone\":\"13733539663\",\"email\":\"zhangjinqiu@email\"}]', '2026-05-26 15:50:59');
-INSERT INTO `sys_audit_log` VALUES (2059180665901096962, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2056695331091046402\",{\"nickname\":\"张晋\",\"phone\":\"13733539663\",\"email\":\"zhangjinqiu@email\"}]', '2026-05-26 15:51:43');
-INSERT INTO `sys_audit_log` VALUES (2059180740366770177, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2056695331091046402\",{\"nickname\":\"张晋秋\",\"phone\":\"13733539663\",\"email\":\"zhangjinqiu@email\"}]', '2026-05-26 15:52:00');
-INSERT INTO `sys_audit_log` VALUES (2059181362893729794, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2059178041382477826\",{\"nickname\":\"老六\",\"password\":\"123\"}]', '2026-05-26 15:54:29');
-INSERT INTO `sys_audit_log` VALUES (2059181517160230913, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2059178041382477826\",{\"nickname\":\"老六\",\"password\":\"123456\"}]', '2026-05-26 15:55:06');
-INSERT INTO `sys_audit_log` VALUES (2059187553178923009, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2056695331091046402\",{\"nickname\":\"张晋秋\",\"password\":\"123456\"}]', '2026-05-26 16:19:05');
-INSERT INTO `sys_audit_log` VALUES (2059189433179222018, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2056695331091046402\",{\"nickname\":\"张晋秋\",\"password\":\"123456\"}]', '2026-05-26 16:26:33');
-INSERT INTO `sys_audit_log` VALUES (2059192565229596673, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2056695331091046402\",{\"nickname\":\"张晋秋\",\"password\":\"123456\"}]', '2026-05-26 16:39:00');
-INSERT INTO `sys_audit_log` VALUES (2059193355759431682, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2056695331091046402\",{\"nickname\":\"张晋秋\",\"password\":\"123456\"}]', '2026-05-26 16:42:08');
-INSERT INTO `sys_audit_log` VALUES (2059197850891522049, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2056695331091046402\",{\"username\":\"zhangjinqiu\",\"nickname\":\"张晋秋\",\"password\":\"123456\",\"avatar\":\"/uploads/5a2af21e-1b8a-4060-bcfb-08bbcf6700b4.jpg\"}]', '2026-05-26 17:00:00');
-INSERT INTO `sys_audit_log` VALUES (2059464181306019841, 1, 'admin', '用户管理', '更新用户', NULL, NULL, '[\"2059226432355373058\",{\"username\":\"xionger\",\"nickname\":\"熊二\",\"password\":\"123456\",\"avatar\":\"/uploads/a7836e21-7ba3-456d-8a4e-3c3195308722.jpg\"}]', '2026-05-27 10:38:18');
+INSERT INTO `sys_audit_log` VALUES (2059905421491249153, 1, 'admin', '用户管理', '更新用户', 2059226432355373058, NULL, '[\"2059226432355373058\",{\"username\":\"xionger\",\"nickname\":\"熊三\",\"password\":\"123456\",\"avatar\":\"/uploads/a7836e21-7ba3-456d-8a4e-3c3195308722.jpg\"}]', '2026-05-28 15:51:38');
+INSERT INTO `sys_audit_log` VALUES (2059909175280050178, 1, 'admin', '用户管理', '更新用户', 2059226432355373058, '{\"id\":\"2059226432355373058\",\"username\":\"xionger\",\"password\":\"$2a$10$XemML54svhbrfHi3l4alL.XJKFpUjB6bg6u86BeZs9kCbFnO68Vwa\",\"nickname\":\"熊三\",\"status\":1,\"createTime\":\"2026-05-26T18:53:35\",\"role\":\"USER\",\"deleted\":0,\"updateTime\":\"2026-05-26T18:53:35\",\"avatar\":\"/uploads/a7836e21-7ba3-456d-8a4e-3c3195308722.jpg\"}', '[\"2059226432355373058\",{\"username\":\"xionger\",\"nickname\":\"熊二\",\"password\":\"123456\",\"avatar\":\"/uploads/a7836e21-7ba3-456d-8a4e-3c3195308722.jpg\"}]', '2026-05-28 16:06:33');
+INSERT INTO `sys_audit_log` VALUES (2059909753980755969, 1, 'admin', '认证管理', '用户登出', NULL, NULL, '[\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWFydC1iYWNrZW5kIiwidXNlcklkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5OTU0ODIyLCJleHAiOjE3ODAwNDEyMjJ9.TZ_G5MthjiOa3duFYEqo-YaaTsS0Q-wQEME9e2lxYcQ\"]', '2026-05-28 16:08:51');
+INSERT INTO `sys_audit_log` VALUES (2059909928350556162, 2059226432355373058, 'xionger', '认证管理', '用户登出', NULL, NULL, '[\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWFydC1iYWNrZW5kIiwidXNlcklkIjoyMDU5MjI2NDMyMzU1MzczMDU4LCJ1c2VybmFtZSI6Inhpb25nZXIiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3OTk1NTc0MSwiZXhwIjoxNzgwMDQyMTQxfQ.bcjmkE9zS8wBYzZ9odeFfQ5o3j6LJGN4Dy3kQGcGQWc\"]', '2026-05-28 16:09:32');
+INSERT INTO `sys_audit_log` VALUES (2059910008948301826, 1, 'admin', '认证管理', '用户登出', NULL, NULL, '[\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWFydC1iYWNrZW5kIiwidXNlcklkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5OTU1Nzc5LCJleHAiOjE3ODAwNDIxNzl9.Bz9wYhkwOWT5QQzDsI2c2UdC9MmPjxCWeDj3Wq3TqTM\"]', '2026-05-28 16:09:52');
+INSERT INTO `sys_audit_log` VALUES (2059910067056189441, 1, 'admin', '认证管理', '用户登出', NULL, NULL, '[\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWFydC1iYWNrZW5kIiwidXNlcklkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5OTU1Nzk3LCJleHAiOjE3ODAwNDIxOTd9.7zNmBY7hD1KWdH3RQvG9n2Hu4qGkvnMGCUYCxwfk5JQ\"]', '2026-05-28 16:10:05');
+INSERT INTO `sys_audit_log` VALUES (2059911403466301443, 1, 'admin', '认证管理', '用户登出', NULL, NULL, '[\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWFydC1iYWNrZW5kIiwidXNlcklkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5OTU1ODEzLCJleHAiOjE3ODAwNDIyMTN9.IAD8tVS9P_LaBYcq4ZyfDcEC4GZeHKSXo08sGWxocpo\"]', '2026-05-28 16:15:24');
+INSERT INTO `sys_audit_log` VALUES (2059968118308077569, 1, 'admin', '用户管理', '更新用户', 1, '{\"id\":\"1\",\"username\":\"admin\",\"password\":\"$2a$10$Dmy60CNBtsNGNFL16jPL4.p9fjcgboTN2MIrw.Hdb92kps6jXDRFi\",\"nickname\":\"管理员\",\"status\":1,\"createTime\":\"2026-05-16T16:10:04\",\"role\":\"ADMIN\",\"deleted\":0,\"updateTime\":\"2026-05-19T15:18:53\"}', '[\"1\",{\"username\":\"admin\",\"nickname\":\"管理员\",\"password\":\"admin727381\"}]', '2026-05-28 20:00:46');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -919,7 +913,7 @@ CREATE TABLE `sys_menu`  (
 -- ----------------------------
 INSERT INTO `sys_menu` VALUES (1, 0, '系统管理', '/system', '', NULL, 0, 1, '2026-05-20 15:10:18');
 INSERT INTO `sys_menu` VALUES (2, 1, '用户管理', '/users', 'user/UserView', 'user:list', 1, 1, '2026-05-20 15:10:18');
-INSERT INTO `sys_menu` VALUES (3, 1, '日志管理', '/log', 'system/log/index', 'log:list', 4, 2, '2026-05-20 15:10:18');
+INSERT INTO `sys_menu` VALUES (3, 1, '日志管理', '/log', 'system/log/index', 'log:list', 1, 7, '2026-05-20 15:10:18');
 INSERT INTO `sys_menu` VALUES (4, 1, '商品管理', '/product', NULL, NULL, 1, 4, '2026-05-21 16:24:35');
 INSERT INTO `sys_menu` VALUES (5, 1, '订单管理', '/order', NULL, NULL, 1, 5, '2026-05-21 16:24:35');
 INSERT INTO `sys_menu` VALUES (6, 1, '会员管理', '/member', 'member/MemberList', NULL, 1, 6, '2026-05-21 16:24:35');
@@ -954,16 +948,14 @@ CREATE TABLE `sys_operation_log`  (
   `ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2059177961132859394 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2059968133701173250 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_operation_log
 -- ----------------------------
-INSERT INTO `sys_operation_log` VALUES (2056275399861764097, 1, 'admin', '删除用户', 'DELETE', '/users/2056275234463580161', '0:0:0:0:0:0:0:1', '2026-05-18 15:27:13');
-INSERT INTO `sys_operation_log` VALUES (2057370011544244225, 1, 'admin', '删除用户', 'DELETE', '/users/2056695332198342658', '0:0:0:0:0:0:0:1', '2026-05-21 15:56:49');
-INSERT INTO `sys_operation_log` VALUES (2059164309898067970, 1, 'admin', '删除用户', 'DELETE', '/users/2059163359330369538', '0:0:0:0:0:0:0:1', '2026-05-26 14:46:43');
-INSERT INTO `sys_operation_log` VALUES (2059177951628566529, 1, 'admin', '删除用户', 'DELETE', '/users/2059174805271400449', '127.0.0.1', '2026-05-26 15:40:56');
-INSERT INTO `sys_operation_log` VALUES (2059177961132859393, 1, 'admin', '删除用户', 'DELETE', '/users/2059165763320872962', '127.0.0.1', '2026-05-26 15:40:58');
+INSERT INTO `sys_operation_log` VALUES (2059967938980610050, 1, 'admin', '用户登出', 'POST', '/auth/logout', '127.0.0.1', '2026-05-28 20:00:03');
+INSERT INTO `sys_operation_log` VALUES (2059968118182248449, 1, 'admin', '更新用户', 'PUT', '/users/1', '127.0.0.1', '2026-05-28 20:00:46');
+INSERT INTO `sys_operation_log` VALUES (2059968133701173249, 1, 'admin', '用户登出', 'POST', '/auth/logout', '127.0.0.1', '2026-05-28 20:00:50');
 
 -- ----------------------------
 -- Table structure for sys_role_menu
@@ -1028,7 +1020,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$Dmy60CNBtsNGNFL16jPL4.p9fjcgboTN2MIrw.Hdb92kps6jXDRFi', '管理员', NULL, NULL, 1, '2026-05-16 16:10:04', 'ADMIN', 0, '2026-05-19 15:18:53', NULL);
+INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$10$oECl8Or8FORPTpmFARHexOm0DdA8z5gSpqyC96qD.wmCM2SADILnW', '管理员', NULL, NULL, 1, '2026-05-16 16:10:04', 'ADMIN', 0, '2026-05-19 15:18:53', NULL);
 INSERT INTO `sys_user` VALUES (2055674343352107010, 'zhangsan', '$2a$10$Dmy60CNBtsNGNFL16jPL4.p9fjcgboTN2MIrw.Hdb92kps6jXDRFi', '张三', NULL, NULL, 1, '2026-05-16 23:38:50', 'USER', 0, '2026-05-19 15:18:53', NULL);
 INSERT INTO `sys_user` VALUES (2056639752335159297, 'tom', '$2a$10$vFXwzQk7oQBJHAF5wwIxR.Xfz57qTM8imqPJYAczZSw1pQC3/QAui', '汤姆', NULL, NULL, 1, '2026-05-19 15:35:02', 'USER', 1, '2026-05-19 15:35:23', NULL);
 INSERT INTO `sys_user` VALUES (2056651952303071233, 'peter', '$2a$10$GjZDtwq7.39jKG2UyyzbbuXk6IlDVbV/D9FpNaBgo1I2umu4F3n.y', '皮特', NULL, NULL, 1, '2026-05-19 16:23:31', 'USER', 0, '2026-05-19 16:23:31', NULL);
@@ -1039,7 +1031,7 @@ INSERT INTO `sys_user` VALUES (2059163359330369538, 'laoliu', '$2a$10$iTX3gyweTE
 INSERT INTO `sys_user` VALUES (2059165763320872962, 'laoliu_del_1779781258247_2059165763320872962', '$2a$10$5lMzGCZNUdxM74iPgX/0cezXmFKLf0bbaGJaACz2Cw/kWvl.BgtbC', '老六', NULL, NULL, 1, '2026-05-26 14:52:30', 'USER', 1, '2026-05-26 15:40:58', NULL);
 INSERT INTO `sys_user` VALUES (2059174805271400449, 'zjq_del_1779781255966_2059174805271400449', '$2a$10$F0kcciNCfOAgvyHaAPUApedtGnxjEtwkv9FDbr/FXfHJwgUsEr41q', '张达猪', NULL, NULL, 1, '2026-05-26 15:28:26', 'USER', 1, '2026-05-26 15:40:55', NULL);
 INSERT INTO `sys_user` VALUES (2059178041382477826, 'laoliu', '$2a$10$iUW8V.U/nc.MpHMJOPJhJeQtD6SLIXpyIHc3bee/5DFa/.4Ir2xZG', '老六', NULL, NULL, 1, '2026-05-26 15:41:17', 'USER', 0, '2026-05-26 15:41:17', NULL);
-INSERT INTO `sys_user` VALUES (2059226432355373058, 'xionger', '$2a$10$gePdX0ajZkQ95zC5arsKc.CpKamk/W43fkiogbCiJjbAk2urDxuUq', '熊二', NULL, NULL, 1, '2026-05-26 18:53:35', 'USER', 0, '2026-05-26 18:53:35', '/uploads/a7836e21-7ba3-456d-8a4e-3c3195308722.jpg');
+INSERT INTO `sys_user` VALUES (2059226432355373058, 'xionger', '$2a$10$g25sljv.H5Xn2WqxHfKAguWRQbVrInWKApzj16Mh2YthnwTP2l0oW', '熊二', NULL, NULL, 1, '2026-05-26 18:53:35', 'USER', 0, '2026-05-26 18:53:35', '/uploads/a7836e21-7ba3-456d-8a4e-3c3195308722.jpg');
 
 -- ----------------------------
 -- Table structure for ums_address
@@ -1059,7 +1051,7 @@ CREATE TABLE `ums_address`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted` tinyint NULL DEFAULT 0 COMMENT '逻辑删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '收货地址表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '收货地址表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of ums_address
