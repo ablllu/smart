@@ -4,6 +4,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: smart-mysql
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: smart_backend
@@ -25,6 +26,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: smart-redis
+    restart: always
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis-data:/data
@@ -41,6 +43,7 @@ services:
   backend:
     build: ./smart-backend
     container_name: smart-backend
+    restart: always
     environment:
       SPRING_PROFILES_ACTIVE: docker
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -62,6 +65,7 @@ services:
   frontend:
     build: ./smart-frontend
     container_name: smart-frontend
+    restart: always
     ports:
       - "81:80"
     depends_on:
@@ -70,6 +74,7 @@ services:
   shop:
     build: ./smart-shop
     container_name: smart-shop
+    restart: always
     ports:
       - "80:80"
     depends_on:

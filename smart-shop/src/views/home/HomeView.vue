@@ -16,6 +16,20 @@
       <el-button type="primary" size="large" @click="handleSearch">搜索</el-button>
     </div>
 
+    <!-- 排序栏 -->
+    <div class="sort-bar">
+      <span
+        class="sort-item"
+        :class="{ active: sort === '' }"
+        @click="handleSort('')"
+      >综合</span>
+      <span
+        class="sort-item"
+        :class="{ active: sort === 'sale_desc' }"
+        @click="handleSort('sale_desc')"
+      >销量</span>
+    </div>
+
     <!-- 商品网格 -->
     <div class="product-grid" v-loading="loading">
       <ProductCard
@@ -55,6 +69,7 @@ const total = ref(0)
 const loading = ref(false)
 const pageNum = ref(1)
 const pageSize = ref(8)
+const sort = ref('')
 
 onMounted(() => {
   fetchData()
@@ -66,13 +81,20 @@ async function fetchData() {
         const res = await productApi.getPage({
             pageNum: pageNum.value,
             pageSize: pageSize.value,
-            keyword: keyword.value || undefined
+            keyword: keyword.value || undefined,
+            sort: sort.value || undefined
         })
         list.value = res.records
         total.value = Number(res.total)
     } finally {
         loading.value = false
     }
+}
+
+function handleSort(val: string) {
+  sort.value = val
+  pageNum.value = 1
+  fetchData()
 }
 
 function handleSearch() {
@@ -96,6 +118,30 @@ function handleSearch() {
 }
 .search-bar .el-input {
   flex: 1;
+}
+
+.sort-bar {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+.sort-item {
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.sort-item:hover {
+  color: #e85d3a;
+}
+.sort-item.active {
+  color: #e85d3a;
+  border-bottom-color: #e85d3a;
+  font-weight: 600;
 }
 
 .product-grid {
