@@ -313,11 +313,11 @@ public class SpuServiceImpl implements SpuService {
             wrapper.in(Spu::getCategoryId, categoryIds);
         }
 
-        // 排序
+        // 排序（id 作为二级排序保证结果稳定）
         if("sale_desc".equals(dto.getSort())) {
-            wrapper.orderByDesc(Spu::getSaleCount);
+            wrapper.orderByDesc(Spu::getSaleCount).orderByDesc(Spu::getId);
         } else  {
-            wrapper.orderByDesc(Spu::getCreateTime); // 默认最新
+            wrapper.orderByDesc(Spu::getCreateTime).orderByDesc(Spu::getId);
         }
 
         //查询
