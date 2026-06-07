@@ -14,9 +14,23 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          script_stop: true
           script: |
+            set -e
             cd ~/smart
-            git pull origin main
-            docker compose up -d --build
+
+            echo "=== 1. 强制同步代码 ==="
+            git fetch origin
+            git reset --hard origin/main
+            echo "当前提交: $(git log -1 --oneline)"
+
+            echo "=== 2. 构建镜像（利用缓存，仅编译变更部分） ==="
+            docker compose build backend frontend shop
+
+            echo "=== 3. 重启容器 ==="
+            docker compose up -d --force-recreate backend frontend shop
+
+            echo "=== 4. 清理旧镜像 ==="
             docker image prune -f
+
+            echo "=== 部署完成 ==="
+            docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
