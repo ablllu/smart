@@ -2,6 +2,7 @@ package com.bbpp.smartbackend.modules.order.controller;
 
 
 import com.bbpp.smartbackend.common.audit.AuditLogAnnotation;
+import com.bbpp.smartbackend.common.auth.RequireRole;
 import com.bbpp.smartbackend.common.idempotent.Idempotent;
 import com.bbpp.smartbackend.common.log.OperationLogAnnotation;
 import com.bbpp.smartbackend.common.page.PageResult;
@@ -38,6 +39,7 @@ public class OrderController {
         return Result.success(orderService.detail(id));
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Idempotent(timeout = 5)
     @Operation(summary = "发货")
     @OperationLogAnnotation(value = "订单发货")
@@ -48,6 +50,7 @@ public class OrderController {
         return Result.success();
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Idempotent(timeout = 5)
     @Operation(summary = "取消订单")
     @OperationLogAnnotation(value = "取消订单")

@@ -1,7 +1,14 @@
 <template>
   <div>
-    <h2 class="page-title">订单管理</h2>
+    <!-- 顶部操作栏 -->
+    <div class="page-header">
+      <div class="header-left">
+        <h2 class="page-title">订单管理</h2>
+        <span class="page-subtitle">共 {{ total }} 条</span>
+      </div>
+    </div>
 
+    <!-- 搜索栏 -->
     <div class="search-bar">
       <el-form :model="query" inline>
         <el-form-item label="订单号">
@@ -19,22 +26,23 @@
       </el-form>
     </div>
 
+    <!-- 表格 -->
     <div class="table-card">
-      <el-table :data="tableData" v-loading="loading" border stripe>
-        <el-table-column prop="orderNo" label="订单号" width="180" />
+      <el-table :data="tableData" v-loading="loading" style="width:100%">
+        <el-table-column prop="orderNo" label="订单号" />
         <el-table-column prop="totalAmount" label="总金额" width="100" />
-        <el-table-column label="支付方式" width="90">
+        <el-table-column label="支付方式" width="85">
           <template #default="{ row }">{{ PayTypeMap[row.payType] }}</template>
         </el-table-column>
-        <el-table-column label="状态" width="100">
+        <el-table-column label="状态" width="90">
           <template #default="{ row }">
             <el-tag :type="OrderStatusMap[row.status]?.type">{{ OrderStatusMap[row.status]?.label }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="receiverName" label="收货人" width="100" />
-        <el-table-column prop="receiverPhone" label="收货电话" width="140" />
-        <el-table-column prop="createTime" label="创建时间" width="180" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column prop="receiverName" label="收货人" width="90" />
+        <el-table-column prop="receiverPhone" label="收货电话" width="130" />
+        <el-table-column prop="createTime" label="创建时间" width="170" />
+        <el-table-column label="操作" width="210" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="showDetail(row.id)">详情</el-button>
             <el-button v-if="row.status === 1" type="success" size="small" @click="handleShip(row.id)">发货</el-button>

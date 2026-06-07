@@ -1,7 +1,17 @@
 <template>
   <div>
-    <h2 class="page-title">商品管理</h2>
+    <!-- 顶部操作栏 -->
+    <div class="page-header">
+      <div class="header-left">
+        <h2 class="page-title">商品管理</h2>
+        <span class="page-subtitle">共 {{ total }} 条</span>
+      </div>
+      <div class="header-right">
+        <el-button type="primary" @click="router.push('/product/add')">新增商品</el-button>
+      </div>
+    </div>
 
+    <!-- 搜索栏 -->
     <div class="search-bar">
       <el-form :model="query" inline>
         <el-form-item label="商品名称">
@@ -11,7 +21,7 @@
           <el-tree-select
             v-model="query.categoryId" :data="categoryTree"
             :props="{ value: 'id', label: 'name', children: 'children' }"
-            placeholder="全部分类" check-strictly clearable style="width:100%"
+            placeholder="全部分类" check-strictly clearable style="width:180px"
           />
         </el-form-item>
         <el-form-item label="状态">
@@ -27,30 +37,26 @@
       </el-form>
     </div>
 
+    <!-- 表格 -->
     <div class="table-card">
-      <div class="toolbar">
-        <el-button type="primary" @click="router.push('/product/add')">新增商品</el-button>
-      </div>
-
-      <el-table :data="tableData" v-loading="loading" border stripe>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="name" label="商品名称" min-width="180" />
-        <el-table-column prop="categoryName" label="分类" width="120" />
-        <el-table-column prop="brand" label="品牌" width="120" />
-        <el-table-column label="主图" width="100">
+      <el-table :data="tableData" v-loading="loading" style="width:100%">
+        <el-table-column prop="name" label="商品名称" />
+        <el-table-column prop="categoryName" label="分类" width="100" />
+        <el-table-column prop="brand" label="品牌" width="100" />
+        <el-table-column label="主图" width="80">
           <template #default="{ row }">
             <el-image v-if="row.mainImage" :src="row.mainImage" :preview-src-list="[row.mainImage]"
               style="width:50px;height:50px" fit="cover" />
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="100">
+        <el-table-column label="状态" width="90">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'info'">
               {{ row.status === 1 ? '上架' : '下架' }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="saleCount" label="销量" width="80" />
+        <el-table-column prop="saleCount" label="销量" width="70" />
         <el-table-column prop="createTime" label="创建时间" width="170" />
         <el-table-column label="操作" width="260" fixed="right">
           <template #default="{ row }">

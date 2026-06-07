@@ -4,15 +4,20 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bbpp.smartbackend.common.exception.BusinessException;
 import com.bbpp.smartbackend.common.page.PageResult;
+import com.bbpp.smartbackend.common.utils.MemberJwtUtil;
+import com.bbpp.smartbackend.modules.member.dto.MemberLoginDTO;
 import com.bbpp.smartbackend.modules.member.dto.MemberPageDTO;
+import com.bbpp.smartbackend.modules.member.dto.MemberRegisterDTO;
 import com.bbpp.smartbackend.modules.member.entity.Address;
 import com.bbpp.smartbackend.modules.member.entity.Member;
 import com.bbpp.smartbackend.modules.member.mapper.AdressMapper;
 import com.bbpp.smartbackend.modules.member.mapper.MemberMapper;
 import com.bbpp.smartbackend.modules.member.service.MemberService;
 import com.bbpp.smartbackend.modules.member.vo.MemberDetailVO;
+import com.bbpp.smartbackend.modules.member.vo.MemberLoginVO;
 import com.bbpp.smartbackend.modules.member.vo.MemberVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,10 +29,13 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
     private final AdressMapper addressMapper;
+    private final MemberJwtUtil memberJwtUtil;
 
-    public MemberServiceImpl(MemberMapper memberMapper, AdressMapper addressMapper) {
+    public MemberServiceImpl(MemberMapper memberMapper, AdressMapper addressMapper,
+                              MemberJwtUtil memberJwtUtil) {
         this.memberMapper = memberMapper;
         this.addressMapper = addressMapper;
+        this.memberJwtUtil = memberJwtUtil;
     }
 
     @Override
@@ -99,5 +107,53 @@ public class MemberServiceImpl implements MemberService {
         }
         member.setStatus(status);
         memberMapper.updateById(member);
+    }
+
+    @Override
+    public void register(MemberRegisterDTO dto) {
+        // 检查用户名是否已存在
+        Member exist = memberMapper.selectOne(
+                new LambdaQueryWrapper<Member>().eq(Member::getUsername, dto.getUsername())
+        );
+        if( exist != null) {
+            throw new BusinessException(400, "用户名已存在");
+        }
+
+        Member member = new Member();
+        member.setUsername(dto.getUsername());
+        member.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
+        member.setNickname(dto.getNickname() != null ? dto.getNickname() : dto.getUsername());
+        member.setStatus(1);
+        memberMapper.insert(member);
+    }
+
+    @Override
+    public Member getByUsername(String username) {
+        return memberMapper.selectOne(
+                new LambdaQueryWrapper<Member>().eq(Member::getUsername, username)
+        );
+    }
+
+    @Override
+    public MemberLoginVO login(MemberLoginDTO dto) {
+        Member member = getByUsername(dto.getUsername());
+        if (member == null) {
+            throw new BusinessException(400, "用户名或密码错误");
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!encoder.matches(dto.getPassword(), member.getPassword())) {
+            throw new BusinessException(400, "用户名或密码错误");
+        }
+        if (member.getStatus() == 0) {
+            throw new BusinessException(403, "账号已被禁用");
+        }
+
+        String token = memberJwtUtil.generateToken(member.getId(), member.getUsername());
+        MemberLoginVO vo = new MemberLoginVO();
+        vo.setMemberId(member.getId());
+        vo.setUsername(member.getUsername());
+        vo.setNickname(member.getNickname());
+        vo.setToken(token);
+        return vo;
     }
 }

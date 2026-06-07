@@ -3,6 +3,7 @@ package com.bbpp.smartbackend.framework.interceptor;
 
 import com.bbpp.smartbackend.common.auth.LoginUser;
 import com.bbpp.smartbackend.common.auth.RequireRole;
+import com.bbpp.smartbackend.common.auth.RoleEnum;
 import com.bbpp.smartbackend.common.auth.UserContext;
 import com.bbpp.smartbackend.common.exception.BusinessException;
 import com.bbpp.smartbackend.common.utils.JwtUtil;
@@ -50,7 +51,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
             String username = (String) claims.get("username");
 
-            String role = (String) claims.get("role");
+            String role = RoleEnum.fromString((String) claims.get("role")).name();
 
             // 检查TOKEN是否存在
             Boolean exists =
@@ -75,6 +76,11 @@ public class LoginInterceptor implements HandlerInterceptor {
                     new LoginUser(userId, username, role)
             );
 
+            // BUYER角色不可访问管理后台
+            if(RoleEnum.BUYER.name().equals( role)) {
+                throw new BusinessException(403, "无权限访问");
+            }
+
 
         } catch (Exception e) {
 
@@ -90,11 +96,25 @@ public class LoginInterceptor implements HandlerInterceptor {
 
             if(requireRole != null) {
 
-                String needRole = requireRole.value();
-
                 LoginUser loginUser = UserContext.get();
+                RoleEnum currentRole = RoleEnum.fromString(loginUser.getRole());
 
-                if(!needRole.equals(loginUser.getRole())) {
+                // SUPER_ADMIN 绕过所有角色检查
+                if(currentRole.isSuperAdmin()) {
+                    return true;
+                }
+
+                // 检查当前角色是否满足 @RequireRole 中任意一个（层级比较）
+                boolean hasPermission = false;
+                for(String required : requireRole.value()) {
+                    RoleEnum requiredRole = RoleEnum.fromString(required);
+                    if(currentRole.satisfies(requiredRole)) {
+                        hasPermission = true;
+                        break;
+                    }
+                }
+
+                if(!hasPermission) {
 
                     throw new BusinessException(403, "无权限访问");
                 }

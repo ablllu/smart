@@ -2,6 +2,7 @@ package com.bbpp.smartbackend.modules.member.controller;
 
 
 import com.bbpp.smartbackend.common.audit.AuditLogAnnotation;
+import com.bbpp.smartbackend.common.auth.RequireRole;
 import com.bbpp.smartbackend.common.idempotent.Idempotent;
 import com.bbpp.smartbackend.common.log.OperationLogAnnotation;
 import com.bbpp.smartbackend.common.page.PageResult;
@@ -39,6 +40,7 @@ public class MemberController {
         return Result.success(memberService.detail(id));
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Idempotent(timeout = 5)
     @Operation(summary = "启用/禁用会员")
     @OperationLogAnnotation(value = "启用/禁用会员")
@@ -49,4 +51,5 @@ public class MemberController {
         memberService.updateStatus(id, status);
         return Result.success();
     }
+
 }

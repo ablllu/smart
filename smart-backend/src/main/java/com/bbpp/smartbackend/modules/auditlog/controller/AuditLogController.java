@@ -2,6 +2,7 @@ package com.bbpp.smartbackend.modules.auditlog.controller;
 
 
 import com.bbpp.smartbackend.common.page.PageResult;
+import com.bbpp.smartbackend.common.auth.RequireRole;
 import com.bbpp.smartbackend.common.result.Result;
 import com.bbpp.smartbackend.modules.auditlog.dto.AuditLogPageDTO;
 import com.bbpp.smartbackend.modules.auditlog.entity.AuditLog;
@@ -23,6 +24,7 @@ public class AuditLogController {
         this.auditLogService = auditLogService;
     }
 
+    @RequireRole({"SUPER_ADMIN"})
     @Operation(summary = "分页查询审计日志")
     @GetMapping("/page")
     public Result<PageResult<AuditLog>> page(AuditLogPageDTO dto) {

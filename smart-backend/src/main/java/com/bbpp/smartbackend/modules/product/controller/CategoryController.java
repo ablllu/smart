@@ -1,6 +1,7 @@
 package com.bbpp.smartbackend.modules.product.controller;
 
 import com.bbpp.smartbackend.common.audit.AuditLogAnnotation;
+import com.bbpp.smartbackend.common.auth.RequireRole;
 import com.bbpp.smartbackend.common.idempotent.Idempotent;
 import com.bbpp.smartbackend.common.log.OperationLogAnnotation;
 import com.bbpp.smartbackend.common.result.Result;
@@ -33,6 +34,7 @@ public class CategoryController {
         return Result.success(categoryService.tree());
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Idempotent(timeout = 5)
     @Operation(summary = "新增分类")
     @OperationLogAnnotation(value = "新增分类")
@@ -43,6 +45,7 @@ public class CategoryController {
         return Result.success();
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Idempotent(timeout = 5)
     @Operation(summary = "修改分类")
     @OperationLogAnnotation(value = "修改分类")
@@ -53,6 +56,7 @@ public class CategoryController {
         return Result.success();
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Idempotent(timeout = 5)
     @Operation(summary = "删除分类")
     @OperationLogAnnotation(value = "删除分类")

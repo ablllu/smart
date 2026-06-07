@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface Idempotent {
 
-    long timeout() default 5;
+    long timeout() default 1;
 }

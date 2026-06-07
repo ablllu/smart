@@ -1,5 +1,6 @@
 package com.bbpp.smartbackend.common.utils;
 
+import com.bbpp.smartbackend.common.auth.RoleEnum;
 import com.bbpp.smartbackend.common.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -29,7 +30,7 @@ public class JwtUtil {
                 .setSubject("smart-backend")
                 .claim("userId", userId)
                 .claim("username", username)
-                .claim("role", role)
+                .claim("role", RoleEnum.fromString(role).name())
                 .setIssuedAt(new Date())
                 .setExpiration(
                         new Date(System.currentTimeMillis() + jwtProperties.getExpire())

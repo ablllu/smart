@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
         redisUtils.set("login:"+token, user.getId().toString(), 86400000L);
         log.info("用户登录成功: {}", dto.getUsername());
 
-        return new LoginVO(user.getId(), user.getUsername(), user.getNickname(), token);
+        return new LoginVO(user.getId(), user.getUsername(), user.getNickname(), token, user.getRole());
     }
 
 
@@ -102,6 +102,7 @@ public class AuthServiceImpl implements AuthService {
         vo.setNickname(user.getNickname());
         vo.setEmail(user.getEmail());
         vo.setPhone(user.getPhone());
+        vo.setRole(user.getRole());
 
         return vo;
     }

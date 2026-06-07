@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bbpp.smartbackend.common.auth.LoginUser;
+import com.bbpp.smartbackend.common.auth.RoleEnum;
 import com.bbpp.smartbackend.common.auth.UserContext;
 import com.bbpp.smartbackend.common.exception.BusinessException;
 import com.bbpp.smartbackend.common.page.PageResult;
@@ -66,6 +67,7 @@ public class UserServiceImpl implements UserService {
         vo.setUsername(user.getUsername());
         vo.setNickname(user.getNickname());
         vo.setAvatar(user.getAvatar());
+        vo.setRole(user.getRole());
         return vo;
     }
 
@@ -80,6 +82,7 @@ public class UserServiceImpl implements UserService {
         detailVO.setStatus(user.getStatus());
         detailVO.setCreateTime(user.getCreateTime());
         detailVO.setAvatar(user.getAvatar());
+        detailVO.setRole(user.getRole());
 
         return detailVO;
     }
@@ -95,6 +98,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(PasswordUtil.encode(dto.getPassword()));
         user.setNickname(dto.getNickname());
         user.setAvatar(dto.getAvatar());
+        user.setRole(dto.getRole());
 
         userMapper.insert(user);
     }
@@ -146,6 +150,7 @@ public class UserServiceImpl implements UserService {
         vo.setPhone(user.getPhone());
         vo.setEmail(user.getEmail());
         vo.setStatus(user.getStatus());
+        vo.setRole(user.getRole());
 
         return vo;
     }
@@ -167,6 +172,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dto.getEmail());
         user.setStatus(dto.getStatus());
         user.setAvatar(dto.getAvatar());
+        user.setRole(dto.getRole());
 
         userMapper.updateById(user);
 
@@ -202,8 +208,11 @@ public class UserServiceImpl implements UserService {
 
         // 角色权限
         LoginUser loginUser = UserContext.get();
-        // 非管理员只能查询自己
-        if(!loginUser.getRole().equals("ADMIN")) {
+
+        RoleEnum currentRole = RoleEnum.fromString(loginUser.getRole());
+        // SUPER_ADMIN \OPERATOR 可以看所有用户
+        // 其他角色只能看自己
+        if(!currentRole.satisfies(RoleEnum.OPERATOR)) {
             wrapper.eq(User::getId, loginUser.getUserId());
         }
 

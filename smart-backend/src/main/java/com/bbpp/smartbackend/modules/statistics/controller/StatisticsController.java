@@ -2,6 +2,7 @@ package com.bbpp.smartbackend.modules.statistics.controller;
 
 
 import com.bbpp.smartbackend.common.result.Result;
+import com.bbpp.smartbackend.common.auth.RequireRole;
 import com.bbpp.smartbackend.modules.statistics.service.StatisticsService;
 import com.bbpp.smartbackend.modules.statistics.vo.StatisticsVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,7 @@ public class StatisticsController {
         this.statisticsService = statisticsService;
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT","CS"})
     @Operation(summary = "首页概览")
     @GetMapping("/overview")
     public Result<StatisticsVO> overview() {

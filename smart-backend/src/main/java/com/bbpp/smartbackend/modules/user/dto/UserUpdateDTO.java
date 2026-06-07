@@ -25,4 +25,6 @@ public class UserUpdateDTO {
     private Integer status;
 
     private String avatar;
+
+    private String role;
 }

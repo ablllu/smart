@@ -1,10 +1,16 @@
+/* ========================================
+   番茄风格全局主题 — Smart Admin
+   主色: #e85d3a (橙)
+   ======================================== */
+
+// ===== 基础 =====
 html, body, #app {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* 全局按钮美化 */
+// ===== 按钮 =====
 .el-button {
   border-radius: 6px;
   letter-spacing: 0.5px;
@@ -12,12 +18,17 @@ html, body, #app {
   font-weight: 500;
 }
 .el-button--primary {
-  --el-button-bg-color: #409eff;
-  --el-button-border-color: #409eff;
+  --el-button-bg-color: #e85d3a;
+  --el-button-border-color: #e85d3a;
 }
 .el-button--primary:hover {
-  --el-button-bg-color: #5cadff;
-  --el-button-border-color: #5cadff;
+  --el-button-bg-color: #f07152;
+  --el-button-border-color: #f07152;
+}
+.el-button--primary.is-plain {
+  --el-button-text-color: #e85d3a;
+  --el-button-border-color: #e85d3a;
+  --el-button-bg-color: #fff7f5;
 }
 .el-button--success {
   --el-button-bg-color: #67c23a;
@@ -31,141 +42,187 @@ html, body, #app {
   --el-button-bg-color: #f56c6c;
   --el-button-border-color: #f56c6c;
 }
+
+// ===== 分页 =====
 .el-pagination.is-background .el-pager li.is-active {
-  background-color: #409eff;
+  background-color: #e85d3a;
 }
 .el-pagination.is-background .el-pager li:hover {
-  color: #409eff;
+  color: #e85d3a;
 }
 
-/* 全局表格美化 */
+// ===== 表格 =====
 .el-table {
   border-radius: 8px;
   overflow: hidden;
+  --el-table-border-color: #f0f0f0;
 }
 .el-table th.el-table__cell {
-  background: #f5f0eb;
+  background: #faf8f6;
   color: #5a4e46;
   font-weight: 600;
   font-size: 13px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid #f0ebe4;
 }
-.el-table .el-table__row:hover > td {
+.el-table td.el-table__cell {
+  border-bottom: 1px solid #f5f5f5;
+}
+.el-table .el-table__body tr:hover > td {
   background: #fdf9f5;
 }
 .el-table--striped .el-table__body tr.el-table__row--striped td {
-  background: #faf7f4;
+  background: #fafbfc;
 }
 
-/* 全局标签圆润 */
+// ===== 标签 =====
 .el-tag {
   border-radius: 4px;
   font-weight: 500;
 }
 
-/* 弹窗/抽屉头部点缀 */
-.el-dialog__header,
+// ===== 弹窗 =====
+.el-dialog {
+  border-radius: 12px;
+  overflow: hidden;
+}
+.el-dialog__header {
+  border-bottom: 1px solid #f0ebe4;
+  padding: 20px 24px 0;
+  margin-bottom: 0;
+}
+.el-dialog__title {
+  font-weight: 600;
+  font-size: 18px;
+  color: #1a1a1a;
+}
+.el-dialog__body {
+  padding: 20px 24px;
+}
+.el-dialog__footer {
+  padding: 0 24px 20px;
+}
+
+// ===== 抽屉 =====
 .el-drawer__header {
   border-bottom: 1px solid #f0ebe4;
   padding-bottom: 16px;
   margin-bottom: 0;
 }
-.el-dialog__title,
 .el-drawer__title {
   font-weight: 600;
   color: #333;
 }
-.el-dialog {
-  border-radius: 10px;
-  overflow: hidden;
+
+// ===== 输入框 =====
+.el-input__wrapper {
+  border-radius: 6px;
+  box-shadow: none;
+  border: 1px solid #e0e0e0;
+  transition: border-color 0.2s;
+}
+.el-input__wrapper:hover {
+  border-color: #c0c0c0;
+}
+.el-input.is-focus .el-input__wrapper {
+  border-color: #e85d3a;
+  box-shadow: 0 0 0 2px rgba(232, 93, 58, 0.1) !important;
 }
 
-/* 表格空状态 */
-.el-table__empty-block {
-  padding: 48px 0;
+// ===== 开关 =====
+.el-switch.is-checked .el-switch__core {
+  background: #e85d3a;
+  border-color: #e85d3a;
 }
-.el-table__empty-text {
-  color: #c0b8b0;
-  font-size: 14px;
+
+// ===== 表格空状态 =====
+.el-table__empty-block { padding: 48px 0; }
+.el-table__empty-text { color: #c0b8b0; font-size: 14px; }
+.el-table__empty-text::before { content: '☕ '; font-size: 20px; }
+
+// ===== 通用页面组件 =====
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
-.el-table__empty-text::before {
-  content: '☕ ';
+.header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.page-title {
   font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+.page-subtitle {
+  font-size: 13px;
+  color: #999;
 }
 
-/* 页面切换过渡 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+// ===== 搜索栏 =====
+.search-bar {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  border: 1px solid #f0f0f0;
+  .el-form-item { margin-bottom: 0; }
 }
 
-/* ===== 移动端全局适配 ===== */
+// ===== 表格卡片 =====
+.table-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px 24px;
+  border: 1px solid #f0f0f0;
+}
+.toolbar {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+// ===== 页面过渡 =====
+.fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+// ===== 移动端 =====
 @media (max-width: 768px) {
-  /* 表格横向滚动 */
   .el-table {
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-
-  /* 内联表单换行 */
   .el-form--inline .el-form-item {
     display: block;
     margin-right: 0;
     margin-bottom: 12px;
   }
-
-  /* 工具栏按钮换行 */
-  .toolbar {
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  /* 卡片减少内边距 */
-  .search-bar,
-  .table-card,
-  .form-card {
-    padding: 14px 12px !important;
-    border-radius: 8px !important;
-  }
-
-  /* 分页紧凑 */
-  .el-pagination {
-    justify-content: center;
-  }
-  .el-pagination .el-pagination__total {
-    display: none;
-  }
-
-  /* 页面标题缩小 */
-  .page-title {
-    font-size: 16px !important;
-    margin-bottom: 14px !important;
-  }
-
-  /* Dialog 弹窗全宽 */
-  .el-dialog {
-    width: 95% !important;
-    border-radius: 8px !important;
-  }
-
-  /* Drawer 抽屉全宽 */
-  .el-drawer {
-    width: 100% !important;
-  }
-
-  /* 描述列表单列 */
-  .el-descriptions__body {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* 固定宽度的选择器自适应 */
-  .el-tree-select,
-  .el-select {
-    max-width: 100%;
-  }
+  .toolbar { flex-wrap: wrap; gap: 6px; }
+  .search-bar, .table-card { padding: 14px 12px !important; border-radius: 8px !important; }
+  .el-pagination { justify-content: center; }
+  .el-pagination .el-pagination__total { display: none; }
+  .page-title { font-size: 16px !important; margin-bottom: 14px !important; }
+  .el-dialog { width: 95% !important; border-radius: 8px !important; }
+  .el-drawer { width: 100% !important; }
+  .el-tree-select, .el-select { max-width: 100%; }
 }

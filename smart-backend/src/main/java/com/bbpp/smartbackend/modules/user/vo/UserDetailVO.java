@@ -23,4 +23,6 @@ public class UserDetailVO {
     private LocalDateTime createTime;
 
     private String avatar;
+
+    private String role;
 }

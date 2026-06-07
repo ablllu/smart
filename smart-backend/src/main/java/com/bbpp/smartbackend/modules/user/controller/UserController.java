@@ -37,6 +37,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Operation(summary = "获取用户列表") // 接口描述
     @GetMapping
     public Result<List<UserVO>> list() {
@@ -50,6 +51,7 @@ public class UserController {
         return Result.success();
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Idempotent(timeout = 5) // 幂等
     @Operation(summary = "创建用户")
     @OperationLogAnnotation(value = "创建用户")
@@ -61,6 +63,7 @@ public class UserController {
         return Result.success();
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Operation(summary = "通过用户名获取用户")
     @GetMapping("/user")
     public Result<User> getUser(@RequestParam String username) {
@@ -69,6 +72,7 @@ public class UserController {
         return Result.success(user);
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Operation(summary = "获取用户详情")
     @GetMapping("/{id}")
     public Result<UserDetailVO> datial(@PathVariable Long id) {
@@ -76,6 +80,7 @@ public class UserController {
         return Result.success(userService.getUserById(id));
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Idempotent(timeout = 5)
     @OperationLogAnnotation(value = "更新用户")
     @AuditLogAnnotation(module = "用户管理", operation = "更新用户", entityClass = User.class)
@@ -92,7 +97,7 @@ public class UserController {
     @Operation(summary = "删除用户")
     @OperationLogAnnotation(value = "删除用户") // 记录操作日志
     @AuditLogAnnotation(module = "用户管理", operation = "删除用户", entityClass = User.class)
-    @RequireRole("ADMIN")
+    @RequireRole({"SUPER_ADMIN"})
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
 
@@ -107,6 +112,7 @@ public class UserController {
     因为GET 请求参数来自 URL 而不是body，
     Spring 会自动封装：?pageNum=1&pageSize=10到 DTO。
      */
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Operation(summary = "分页查询用户")
     @GetMapping("/page")
     public Result<PageResult<UserDetailVO>> page(UserPageDTO dto) {
@@ -114,6 +120,7 @@ public class UserController {
         return Result.success(userService.pageUsers(dto));
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Operation(summary = "导出用户")
     @GetMapping("/export/excel")
     public void export(
@@ -154,6 +161,7 @@ public class UserController {
         );
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR"})
     @Idempotent(timeout = 5)
     @Operation(summary = "导入用户")
     @OperationLogAnnotation(value = "导入用户")

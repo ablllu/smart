@@ -1,5 +1,6 @@
 package com.bbpp.smartbackend.modules.operationlog.controller;
 
+import com.bbpp.smartbackend.common.auth.RequireRole;
 import com.bbpp.smartbackend.common.page.PageResult;
 import com.bbpp.smartbackend.common.result.Result;
 import com.bbpp.smartbackend.modules.operationlog.dto.OperationLogPageDTO;
@@ -21,6 +22,7 @@ public class OperationLogController {
         this.operationLogService = operationLogService;
     }
 
+    @RequireRole({"SUPER_ADMIN"})
     @GetMapping("/page")
     public Result<PageResult<OperationLog>> page(OperationLogPageDTO dto) {
 

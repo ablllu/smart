@@ -1,6 +1,7 @@
 package com.bbpp.smartbackend.modules.product.controller;
 
 import com.bbpp.smartbackend.common.audit.AuditLogAnnotation;
+import com.bbpp.smartbackend.common.auth.RequireRole;
 import com.bbpp.smartbackend.common.idempotent.Idempotent;
 import com.bbpp.smartbackend.common.log.OperationLogAnnotation;
 import com.bbpp.smartbackend.common.page.PageResult;
@@ -43,6 +44,7 @@ public class SpuController {
         return Result.success(spuService.detail(id));
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Idempotent(timeout = 5)
     @Operation(summary = "商品创建")
     @OperationLogAnnotation(value = "创建商品")
@@ -55,6 +57,7 @@ public class SpuController {
         return Result.success();
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Idempotent(timeout = 5)
     @Operation(summary = "商品修改")
     @OperationLogAnnotation(value = "修改商品")
@@ -67,6 +70,7 @@ public class SpuController {
         return Result.success();
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Idempotent(timeout = 5)
     @Operation(summary = "商品上下架")
     @OperationLogAnnotation(value = "商品上下架")
@@ -79,6 +83,7 @@ public class SpuController {
         return Result.success();
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Idempotent(timeout = 5)
     @Operation(summary = "商品删除")
     @OperationLogAnnotation(value = "删除商品")

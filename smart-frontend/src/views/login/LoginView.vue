@@ -49,7 +49,8 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
 import * as authApi from '../../api/auth'
-import { loadDynamicRoutes } from '../../router'
+import { loadDynamicRoutes, resetRoutesLoaded } from '../../router'
+import { useUserStore } from '../../stores/user'
 
 const router = useRouter()
 const form = reactive({ username: '', password: '' })
@@ -64,7 +65,17 @@ async function handleLogin() {
   try {
     const result = await authApi.login(form)
     localStorage.setItem('token', result.token)
-    // 先加载动态路由再导航，避免 beforeEach 中异步加载+重定向导致白屏
+    // 保存用户信息和角色到 store
+    const userStore = useUserStore()
+    userStore.setToken(result.token)
+    userStore.setUserInfo({
+      id: String(result.userId),
+      username: result.username,
+      nickname: result.nickname,
+      role: result.role
+    })
+    // 重置状态后重新加载，避免因之前过期token导致routesLoaded=true但菜单为空
+    resetRoutesLoaded()
     await loadDynamicRoutes()
     ElMessage.success(`欢迎，${result.nickname || result.username}！`)
     await router.push('/dashboard')

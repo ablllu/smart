@@ -3,6 +3,9 @@ package com.bbpp.smartbackend.modules.order.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bbpp.smartbackend.common.auth.LoginUser;
+import com.bbpp.smartbackend.common.auth.RoleEnum;
+import com.bbpp.smartbackend.common.auth.UserContext;
 import com.bbpp.smartbackend.common.exception.BusinessException;
 import com.bbpp.smartbackend.common.page.PageResult;
 import com.bbpp.smartbackend.modules.order.dto.OrderPageDTO;
@@ -73,6 +76,12 @@ public class OrderServiceImpl implements OrderService {
 
         wrapper.orderByDesc(Order::getCreateTime);
 
+        // MERCHANT 只能看自己的订单
+        LoginUser loginUser = UserContext.get();
+        if (loginUser != null && RoleEnum.MERCHANT.name().equals(loginUser.getRole())) {
+            wrapper.eq(Order::getMerchantId, loginUser.getUserId());
+        }
+
         // 查询
         Page<Order> result = orderMapper.selectPage(page, wrapper);
 
@@ -119,6 +128,15 @@ public class OrderServiceImpl implements OrderService {
         if(order == null) {
             throw new BusinessException(404, "订单不存在");
         }
+
+        // MERCHANT 只能发自己的订单
+        LoginUser loginUser = UserContext.get();
+        if (loginUser != null && RoleEnum.MERCHANT.name().equals(loginUser.getRole())) {
+            if (!loginUser.getUserId().equals(order.getMerchantId())) {
+                throw new BusinessException(403, "只能操作自己的订单");
+            }
+        }
+
         if(order.getStatus() != 1) {
             throw new BusinessException("只有待发货状态的订单才能发货");
         }

@@ -1,21 +1,26 @@
 <template>
   <div>
-    <h2 class="page-title">商品分类</h2>
-
-    <div class="table-card">
-      <div class="toolbar">
+    <!-- 顶部操作栏 -->
+    <div class="page-header">
+      <div class="header-left">
+        <h2 class="page-title">商品分类</h2>
+        <span class="page-subtitle">共 {{ treeData.length }} 个一级分类</span>
+      </div>
+      <div class="header-right">
         <el-button type="primary" @click="handleAdd(null)">新增分类</el-button>
       </div>
+    </div>
 
-      <el-table :data="treeData" row-key="id" :tree-props="{ children: 'children' }" default-expand-all border stripe>
+    <!-- 表格 -->
+    <div class="table-card">
+      <el-table :data="treeData" row-key="id" :tree-props="{ children: 'children' }">
         <el-table-column prop="name" label="分类名称" min-width="200" />
-        <el-table-column prop="sortNum" label="排序" width="100" />
-        <el-table-column label="状态" width="100">
+                <el-table-column label="状态" width="100" align="center">
           <template #default="{ row }">
             <el-switch :model-value="row.status === 1" @change="(val: boolean) => handleStatusChange(row, val)" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="280">
+        <el-table-column label="操作" width="280" align="center">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="handleAdd(row)">添加子分类</el-button>
             <el-button size="small" @click="handleEdit(row)">编辑</el-button>
@@ -25,6 +30,7 @@
       </el-table>
     </div>
 
+    <!-- 弹窗 -->
     <el-dialog v-model="dialogVisible" :title="isEdit ? '编辑分类' : '新增分类'" width="500px" @closed="resetForm">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="分类名称" prop="name">
@@ -95,16 +101,28 @@ async function handleDelete(row: any) {
 }
 
 async function handleStatusChange(row: any, val: boolean) {
-  await categoryApi.update(row.id, { status: val ? 1 : 0 })
+  const newStatus = val ? 1 : 0
+  await categoryApi.update(row.id, { status: newStatus })
+  row.status = newStatus
+
+  // 递归同步所有子分类的状态
+  if (row.children?.length) {
+    updateChildrenStatus(row.children, newStatus)
+  }
+
   ElMessage.success(val ? '已启用' : '已禁用')
-  fetchData()
+}
+
+/** 递归更新子分类状态（本地 + 后端） */
+function updateChildrenStatus(children: any[], newStatus: number) {
+  for (const child of children) {
+    categoryApi.update(child.id, { status: newStatus })
+    child.status = newStatus
+    if (child.children?.length) {
+      updateChildrenStatus(child.children, newStatus)
+    }
+  }
 }
 
 function resetForm() { formRef.value?.resetFields() }
 </script>
-
-<style scoped>
-.page-title { font-size: 20px; font-weight: 600; color: #333; margin: 0 0 20px; }
-.table-card { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-.toolbar { margin-bottom: 16px; }
-</style>

@@ -54,5 +54,8 @@ public class Spu {
 
     @TableLogic
     private Integer deleted;
+
+    /** 商家用户ID（MERCHANT角色时必填） */
+    private Long merchantId;
 }
 

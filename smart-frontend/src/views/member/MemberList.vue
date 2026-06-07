@@ -1,7 +1,14 @@
 <template>
   <div>
-    <h2 class="page-title">会员管理</h2>
+    <!-- 顶部操作栏 -->
+    <div class="page-header">
+      <div class="header-left">
+        <h2 class="page-title">会员管理</h2>
+        <span class="page-subtitle">共 {{ total }} 条</span>
+      </div>
+    </div>
 
+    <!-- 搜索栏 -->
     <div class="search-bar">
       <el-form :model="query" inline>
         <el-form-item label="用户名">
@@ -23,13 +30,13 @@
       </el-form>
     </div>
 
+    <!-- 表格 -->
     <div class="table-card">
-      <el-table :data="tableData" v-loading="loading" border stripe>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="username" label="用户名" width="140" />
-        <el-table-column prop="nickname" label="昵称" width="140" />
-        <el-table-column prop="phone" label="手机号" width="140" />
-        <el-table-column label="等级" width="120">
+      <el-table :data="tableData" v-loading="loading" style="width:100%">
+        <el-table-column prop="username" label="用户名" />
+        <el-table-column prop="nickname" label="昵称" />
+        <el-table-column prop="phone" label="手机号" />
+        <el-table-column label="等级" width="100">
           <template #default="{ row }">
             <el-tag>{{ MemberLevelMap[row.memberLevel] }}</el-tag>
           </template>

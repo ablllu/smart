@@ -32,12 +32,11 @@
             </el-form>
           </div>
 
-          <el-table :data="opData" border stripe>
-            <el-table-column prop="id" label="ID" width="70" />
-            <el-table-column prop="username" label="用户名" width="120" />
-            <el-table-column prop="operation" label="操作" min-width="140" />
-            <el-table-column prop="method" label="请求方法" width="90" />
-            <el-table-column prop="path" label="请求路径" min-width="180" />
+          <el-table :data="opData" border stripe style="width:100%">
+            <el-table-column prop="username" label="用户名" width="100" />
+            <el-table-column prop="operation" label="操作" />
+            <el-table-column prop="method" label="方法" width="80" />
+            <el-table-column prop="path" label="请求路径" />
             <el-table-column prop="ip" label="IP" width="140" />
             <el-table-column prop="createTime" label="时间" width="170" />
           </el-table>
@@ -85,18 +84,17 @@
             </el-form>
           </div>
 
-          <el-table :data="auditData" border stripe>
-            <el-table-column prop="id" label="ID" width="70" />
-            <el-table-column prop="username" label="用户名" width="120" />
-            <el-table-column prop="moduleName" label="模块" width="120" />
-            <el-table-column prop="operationType" label="操作类型" width="120" />
+          <el-table :data="auditData" border stripe style="width:100%">
+            <el-table-column prop="username" label="用户名" width="100" />
+            <el-table-column prop="moduleName" label="模块" width="100" />
+            <el-table-column prop="operationType" label="操作" width="100" />
             <el-table-column prop="businessId" label="业务ID" width="80" />
-            <el-table-column prop="oldData" label="旧数据" min-width="160">
+            <el-table-column prop="oldData" label="旧数据">
               <template #default="{ row }">
                 <span style="font-size:12px;color:#999">{{ row.oldData }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="newData" label="新数据" min-width="160">
+            <el-table-column prop="newData" label="新数据">
               <template #default="{ row }">
                 <span style="font-size:12px;color:#999">{{ row.newData }}</span>
               </template>
@@ -147,10 +145,9 @@
             </el-form>
           </div>
 
-          <el-table :data="loginData" border stripe>
-            <el-table-column prop="id" label="ID" width="70" />
-            <el-table-column prop="username" label="用户名" width="120" />
-            <el-table-column prop="operation" label="状态" min-width="140">
+          <el-table :data="loginData" border stripe style="width:100%">
+            <el-table-column prop="username" label="用户名" width="100" />
+            <el-table-column prop="operation" label="状态" width="100">
               <template #default="{ row }">
                 <el-tag
                   :type="row.operation?.includes('失败') ? 'danger' : 'success'"

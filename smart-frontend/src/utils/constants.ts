@@ -22,3 +22,33 @@ export const ProductStatusMap: Record<number, { label: string; type: string }> =
   0: { label: '下架', type: 'info' },
   1: { label: '上架', type: 'success' }
 }
+
+/** 角色中文映射 */
+export const RoleMap: Record<string, string> = {
+  SUPER_ADMIN: '超级管理员',
+  OPERATOR: '运营人员',
+  MERCHANT: '商家',
+  BUYER: '买家',
+  CS: '客服'
+}
+
+/** 角色下拉选项 */
+export const RoleOptions = [
+  { label: '超级管理员', value: 'SUPER_ADMIN' },
+  { label: '运营人员', value: 'OPERATOR' },
+  { label: '商家', value: 'MERCHANT' },
+  { label: '买家', value: 'BUYER' },
+  { label: '客服', value: 'CS' }
+] as const
+
+/** 角色对应的 el-tag 类型 */
+export function getRoleTagType(role: string): string {
+  const map: Record<string, string> = {
+    SUPER_ADMIN: 'danger',
+    OPERATOR: 'warning',
+    MERCHANT: 'primary',
+    CS: 'success',
+    BUYER: 'info'
+  }
+  return map[role] || 'info'
+}

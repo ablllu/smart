@@ -1,6 +1,7 @@
 package com.bbpp.smartbackend.modules.upload.controller;
 
 
+import com.bbpp.smartbackend.common.auth.RequireRole;
 import com.bbpp.smartbackend.common.properties.UploadProperties;
 import com.bbpp.smartbackend.common.result.Result;
 import com.bbpp.smartbackend.modules.upload.vo.UploadVO;
@@ -28,6 +29,7 @@ public class UploadController {
         this.uploadProperties = uploadProperties;
     }
 
+    @RequireRole({"SUPER_ADMIN","OPERATOR","MERCHANT"})
     @Operation(summary = "上传图片")
     @PostMapping("/image")
     public Result<UploadVO> upload(

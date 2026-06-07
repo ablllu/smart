@@ -86,4 +86,7 @@ public class Order {
 
     @TableLogic
     private Integer deleted;
+
+    /** 商家用户ID（MERCHANT角色时存储归属商家） */
+    private Long merchantId;
 }

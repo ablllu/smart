@@ -1,6 +1,23 @@
 <template>
   <div>
-    <h2 class="page-title">用户管理</h2>
+    <!-- 顶部操作栏 -->
+    <div class="page-header">
+      <div class="header-left">
+        <h2 class="page-title">用户管理</h2>
+        <span class="page-subtitle">共 {{ total }} 条</span>
+      </div>
+      <div class="header-right">
+        <el-button v-if="isOperatorOrAbove()" type="primary" @click="handleAdd">新增用户</el-button>
+        <el-button v-if="isOperatorOrAbove()" type="success" @click="handleExport">导出 Excel</el-button>
+        <el-upload
+          style="margin:0;display:inline-block"
+          :show-file-list="false"
+          :before-upload="beforeImport"
+        >
+          <el-button type="warning">导入 Excel</el-button>
+        </el-upload>
+      </div>
+    </div>
 
     <!-- 搜索 -->
     <div class="search-bar">
@@ -17,32 +34,26 @@
 
     <!-- 表格 -->
     <div class="table-card">
-      <div class="toolbar">
-        <el-button type="primary" @click="handleAdd">新增用户</el-button>
-        <el-button type="success" @click="handleExport">导出 Excel</el-button>
-        <el-upload
-          style="margin:0;display:inline-block"
-          :show-file-list="false"
-          :before-upload="beforeImport"
-        >
-          <el-button type="warning">导入 Excel</el-button>
-        </el-upload>
-      </div>
-
-      <el-table :data="tableData" border stripe>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="username" label="用户名" width="140" />
-        <el-table-column prop="nickname" label="昵称" width="140" />
-        <el-table-column label="头像" width="80">
+      <el-table :data="tableData" style="width:100%">
+                <el-table-column prop="username" label="用户名" min-width="100" />
+        <el-table-column prop="nickname" label="昵称" min-width="100" />
+        <el-table-column label="角色" min-width="100">
+          <template #default="{ row }">
+            <el-tag :type="getRoleTagType(row.role)" size="small">
+              {{ RoleMap[row.role] || row.role }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="头像" width="70" align="center">
           <template #default="{ row }">
             <el-avatar :src="row.avatar" :size="36" />
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" min-width="170" />
-        <el-table-column label="操作" width="150">
+        <el-table-column prop="createTime" label="创建时间" min-width="160" />
+        <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
+            <el-button v-if="isOperatorOrAbove()" type="primary" link @click="handleEdit(row)">编辑</el-button>
+            <el-button v-if="hasRole('SUPER_ADMIN')" type="danger" link @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,7 +80,10 @@ import { onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import UserFormDialog from './components/UserFormDialog.vue'
 import { saveAs } from 'file-saver'
+import { RoleMap, getRoleTagType } from '../../utils/constants'
+import { useRole } from '../../composables/useRole'
 
+const { hasRole, isOperatorOrAbove } = useRole()
 const dialogRef = ref()
 const searchForm = reactive({ username: '' })
 const tableData = ref<any[]>([])

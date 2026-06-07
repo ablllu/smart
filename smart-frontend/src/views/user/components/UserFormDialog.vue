@@ -23,6 +23,17 @@
         <el-input v-model="form.nickname" />
       </el-form-item>
 
+      <el-form-item label="角色" prop="role">
+        <el-select v-model="form.role" placeholder="请选择角色">
+          <el-option
+            v-for="opt in roleOptions"
+            :key="opt.value"
+            :label="opt.label"
+            :value="opt.value"
+          />
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="头像">
         <el-upload
           class="avatar-uploader"
@@ -49,10 +60,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import * as userApi from '../../../api/user'
 import * as uploadApi from '../../../api/upload'
+import { RoleOptions } from '../../../utils/constants'
+import { useRole } from '../../../composables/useRole'
 
 const emit = defineEmits(['success'])
 
@@ -60,18 +73,28 @@ const visible = ref(false)
 const title = ref('')
 const formRef = ref()
 
+// 根据当前用户角色过滤可选角色列表
+const roleOptions = computed(() => {
+  const currentRole = useRole().currentRole
+  if (currentRole === 'SUPER_ADMIN') return [...RoleOptions]
+  if (currentRole === 'OPERATOR') return RoleOptions.filter(r => r.value !== 'SUPER_ADMIN')
+  return RoleOptions.filter(r => r.value === currentRole)
+})
+
 const form = reactive({
   id: undefined,
   username: '',
   password: '',
   nickname: '',
-  avatar: ''
+  avatar: '',
+  role: 'BUYER'
 })
 
 const rules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-  nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }]
+  nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+  role: [{ required: true, message: '请选择角色', trigger: 'change' }]
 }
 
 function openAdd() {
@@ -82,6 +105,7 @@ function openAdd() {
   form.password = ''
   form.nickname = ''
   form.avatar = ''
+  form.role = 'BUYER'
 }
 
 function openEdit(row: any) {
@@ -92,6 +116,7 @@ function openEdit(row: any) {
   form.password = row.password
   form.nickname = row.nickname
   form.avatar = row.avatar
+  form.role = row.role || 'BUYER'
 }
 
 async function submitForm() {

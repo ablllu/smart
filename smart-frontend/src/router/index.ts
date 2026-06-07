@@ -70,10 +70,12 @@ export async function loadDynamicRoutes() {
 
     function addRoutes(items: any[]) {
       for (const item of items) {
+        // 目录(type=0)或有子节点的菜单(type=1)：递归处理子节点
         if ((item.type === 0 || item.type === 1) && item.children?.length) {
           addRoutes(item.children)
         }
-        if ((item.type === 1 || item.type === 2) && item.component) {
+        // 所有有 component 的节点都注册路由
+        if (item.component) {
           const key = `../views/${item.component}.vue`
           const comp = viewModules[key]
           if (comp) {
@@ -89,8 +91,13 @@ export async function loadDynamicRoutes() {
     addRoutes(menuStore.menuTree)
     routesLoaded = true
   } catch {
-    routesLoaded = true
+    // 加载失败不标记，允许下次重试
   }
+}
+
+/** 重置动态路由加载状态（登录时调用，确保重新加载菜单） */
+export function resetRoutesLoaded() {
+  routesLoaded = false
 }
 
 export function isRoutesLoaded() {

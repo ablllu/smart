@@ -17,6 +17,9 @@ server:
 jwt:
   secret: ${JWT_SECRET:smartYbackendYjwtYsecretYkeyYstringY2024Yv1}
   expire: ${JWT_EXPIRE:86400000}
+  member:
+    secret: ${JWT_MEMBER_SECRET:smartYshopYmemberjwtYsecretYkeyYstringY2026Yv1}
+    expire: ${JWT_MEMBER_EXPIRE:86400000}
 
 upload:
   path: ${user.dir}/uploads/
