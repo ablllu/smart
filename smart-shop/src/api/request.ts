@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { type AxiosRequestConfig } from 'axios'
 import { ElMessage } from 'element-plus'
 
 const instance = axios.create({
@@ -31,4 +31,9 @@ instance.interceptors.response.use(
     }
 )
 
-export default instance
+// 泛型包装函数：响应拦截器已解包为 data.data，此处将类型收窄为泛型 T
+function request<T = any>(config: AxiosRequestConfig): Promise<T> {
+    return instance(config) as Promise<T>
+}
+
+export default request
