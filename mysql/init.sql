@@ -11,11 +11,35 @@
  Target Server Version : 80045 (8.0.45)
  File Encoding         : 65001
 
- Date: 07/06/2026 13:50:06
+ Date: 09/06/2026 22:32:16
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for merchant_shop
+-- ----------------------------
+DROP TABLE IF EXISTS `merchant_shop`;
+CREATE TABLE `merchant_shop`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint NOT NULL COMMENT '关联sys_user.id',
+  `shop_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '店铺名称',
+  `logo` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '店铺Logo URL',
+  `description` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '店铺简介',
+  `contact_phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '客服电话',
+  `rating` decimal(2, 1) NULL DEFAULT 5.0 COMMENT '店铺评分',
+  `status` tinyint NULL DEFAULT 1 COMMENT '0-关闭 1-营业',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_user_id`(`user_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商家店铺表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of merchant_shop
+-- ----------------------------
+INSERT INTO `merchant_shop` VALUES (1, 2062441501356679170, '默认店铺', NULL, NULL, NULL, 5.0, 1, '2026-06-09 22:22:17', '2026-06-09 22:22:17');
 
 -- ----------------------------
 -- Table structure for oms_cart
@@ -73,7 +97,7 @@ INSERT INTO `oms_order` VALUES (5, '20260520000000005', 2, 14248.00, 14248.00, 0
 INSERT INTO `oms_order` VALUES (2062893987867553794, '202606050667228077', 2062847231003889666, 18997.00, 18997.00, 0.00, NULL, NULL, 4, NULL, NULL, NULL, NULL, '2026-06-05 21:47:08', '2026-06-05 21:47:08', 0, NULL);
 INSERT INTO `oms_order` VALUES (2062894816007741441, '202606050667425522', 2062847231003889666, 6999.00, 6999.00, 0.00, NULL, '2026-06-05 21:50:35', 1, NULL, NULL, NULL, NULL, '2026-06-05 21:50:26', '2026-06-05 21:50:26', 0, NULL);
 INSERT INTO `oms_order` VALUES (2062912817461387265, '202606050671717405', 2062847231003889666, 8999.00, 8999.00, 0.00, NULL, NULL, 4, NULL, NULL, NULL, NULL, '2026-06-05 23:01:57', '2026-06-05 23:01:57', 0, NULL);
-INSERT INTO `oms_order` VALUES (2063497202405371906, '202606070811045632', 2062847231003889666, 8999.00, 8999.00, 0.00, NULL, '2026-06-07 13:44:09', 1, NULL, NULL, NULL, NULL, '2026-06-07 13:44:06', '2026-06-07 13:44:06', 0, NULL);
+INSERT INTO `oms_order` VALUES (2063497202405371906, '202606070811045632', 2062847231003889666, 8999.00, 8999.00, 0.00, NULL, '2026-06-07 13:44:09', 3, NULL, NULL, NULL, NULL, '2026-06-07 13:44:06', '2026-06-07 13:44:06', 0, NULL);
 
 -- ----------------------------
 -- Table structure for oms_order_item
@@ -112,6 +136,32 @@ INSERT INTO `oms_order_item` VALUES (2062893987896913922, 2062893987867553794, '
 INSERT INTO `oms_order_item` VALUES (2062894816007741442, 2062894816007741441, '202606050667425522', 2, 5, '华为 Mate 70 Pro', '雅丹黑/512GB', NULL, NULL, 6999.00, 1, 6999.00, '2026-06-05 21:50:25', 0);
 INSERT INTO `oms_order_item` VALUES (2062912817461387266, 2062912817461387265, '202606050671717405', 1, 1, 'iPhone 16 Pro Max', '黑色/256GB', NULL, NULL, 8999.00, 1, 8999.00, '2026-06-05 23:01:57', 0);
 INSERT INTO `oms_order_item` VALUES (2063497202405371907, 2063497202405371906, '202606070811045632', 1, 1, 'iPhone 16 Pro Max', '黑色/256GB', NULL, NULL, 8999.00, 1, 8999.00, '2026-06-07 13:44:05', 0);
+
+-- ----------------------------
+-- Table structure for oms_review
+-- ----------------------------
+DROP TABLE IF EXISTS `oms_review`;
+CREATE TABLE `oms_review`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `order_id` bigint NOT NULL COMMENT '订单ID',
+  `order_no` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '订单号',
+  `spu_id` bigint NOT NULL COMMENT '商品SPU ID',
+  `member_id` bigint NOT NULL COMMENT '会员ID',
+  `rating` tinyint NOT NULL COMMENT '评分 1-5',
+  `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '评价内容',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted` tinyint NULL DEFAULT 0 COMMENT '逻辑删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_order_id`(`order_id` ASC) USING BTREE,
+  INDEX `idx_spu_id`(`spu_id` ASC) USING BTREE,
+  INDEX `idx_member_id`(`member_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2064353442916388866 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品评价表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oms_review
+-- ----------------------------
+INSERT INTO `oms_review` VALUES (2064353442916388865, 2063497202405371906, '202606070811045632', 1, 2062847231003889666, 5, '非常好', '2026-06-09 22:26:29', '2026-06-09 22:26:29', 0);
 
 -- ----------------------------
 -- Table structure for pms_category
@@ -907,7 +957,7 @@ CREATE TABLE `sys_audit_log`  (
   `new_data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2062915211423309826 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2064353027143421954 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_audit_log
@@ -1723,6 +1773,7 @@ INSERT INTO `sys_audit_log` VALUES (2062796788391424002, 1, 'admin', '商品分�
 INSERT INTO `sys_audit_log` VALUES (2062796788458532866, 1, 'admin', '商品分类', '修改分类', 10703, '{\"id\":\"10703\",\"name\":\"蓝牙音箱\",\"parentId\":\"107\",\"icon\":\"\",\"sortNum\":3,\"status\":0,\"createTime\":\"2026-05-21T20:41:54\",\"updateTime\":\"2026-05-21T20:41:54\",\"deleted\":0}', '[\"10703\",{\"status\":1}]', '2026-06-05 15:20:53');
 INSERT INTO `sys_audit_log` VALUES (2062915182532943874, 1, 'admin', '会员管理', '启用/禁用会员', 2062847231003889666, '{\"id\":\"2062847231003889666\",\"username\":\"test\",\"password\":\"$2a$10$Tj0irQNy3.ok2v3inuCnKusqJrio4qVCvVJJZXvuxbcs8j0IA2wvG\",\"nickname\":\"TEST_MEMBER\",\"gender\":0,\"memberLevel\":1,\"status\":1,\"createTime\":\"2026-06-05T18:41:20\",\"updateTime\":\"2026-06-05T18:41:20\",\"deleted\":0}', '[\"2062847231003889666\",0]', '2026-06-05 23:11:21');
 INSERT INTO `sys_audit_log` VALUES (2062915211423309825, 1, 'admin', '会员管理', '启用/禁用会员', 2062847231003889666, '{\"id\":\"2062847231003889666\",\"username\":\"test\",\"password\":\"$2a$10$Tj0irQNy3.ok2v3inuCnKusqJrio4qVCvVJJZXvuxbcs8j0IA2wvG\",\"nickname\":\"TEST_MEMBER\",\"gender\":0,\"memberLevel\":1,\"status\":0,\"createTime\":\"2026-06-05T18:41:20\",\"updateTime\":\"2026-06-05T18:41:20\",\"deleted\":0}', '[\"2062847231003889666\",1]', '2026-06-05 23:11:28');
+INSERT INTO `sys_audit_log` VALUES (2064353027143421953, 1, 'admin', '订单管理', '订单发货', 2063497202405371906, '{\"id\":\"2063497202405371906\",\"orderNo\":\"202606070811045632\",\"memberId\":\"2062847231003889666\",\"totalAmount\":8999.00,\"payAmount\":8999.00,\"freightAmount\":0.00,\"status\":1,\"createTime\":\"2026-06-07T13:44:06\",\"updateTime\":\"2026-06-07T13:44:06\",\"deleted\":0}', '[\"2063497202405371906\"]', '2026-06-09 22:24:50');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -1739,7 +1790,7 @@ CREATE TABLE `sys_menu`  (
   `sort_num` int NULL DEFAULT 0,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -1776,6 +1827,7 @@ INSERT INTO `sys_menu` VALUES (29, 27, '我的订单', '/shop/orders', 'order/Or
 INSERT INTO `sys_menu` VALUES (30, 29, '发货', NULL, NULL, 'shop:order:ship', 3, 1, '2026-06-01 20:14:28');
 INSERT INTO `sys_menu` VALUES (31, 0, '系统配置', '/system-config', '', NULL, 0, 10, '2026-06-01 20:14:28');
 INSERT INTO `sys_menu` VALUES (32, 31, '配置管理', '/system-config/manage', 'system/ConfigManage', 'system:config:manage', 2, 1, '2026-06-01 20:14:28');
+INSERT INTO `sys_menu` VALUES (33, 27, '店铺列表', '/shop/list', 'merchant/ShopList', 'merchant:shop:list', 2, 3, '2026-06-09 22:22:17');
 
 -- ----------------------------
 -- Table structure for sys_operation_log
@@ -1791,7 +1843,7 @@ CREATE TABLE `sys_operation_log`  (
   `ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2063497011711340547 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2064354769046261763 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_operation_log
@@ -2621,6 +2673,9 @@ INSERT INTO `sys_operation_log` VALUES (2062796788324315140, 1, 'admin', '修改
 INSERT INTO `sys_operation_log` VALUES (2062915182465835010, 1, 'admin', '启用/禁用会员', 'PUT', '/admin/member/2062847231003889666/status', '127.0.0.1', '2026-06-05 23:11:21');
 INSERT INTO `sys_operation_log` VALUES (2062915211360395266, 1, 'admin', '启用/禁用会员', 'PUT', '/admin/member/2062847231003889666/status', '127.0.0.1', '2026-06-05 23:11:28');
 INSERT INTO `sys_operation_log` VALUES (2063497011711340546, 1, 'admin', '用户登出', 'POST', '/auth/logout', '127.0.0.1', '2026-06-07 13:43:20');
+INSERT INTO `sys_operation_log` VALUES (2063531132680564737, 2062441501356679170, 'merchant', '用户登出', 'POST', '/auth/logout', '127.0.0.1', '2026-06-07 15:58:55');
+INSERT INTO `sys_operation_log` VALUES (2064353027084701698, 1, 'admin', '订单发货', 'PUT', '/admin/order/2063497202405371906/ship', '127.0.0.1', '2026-06-09 22:24:50');
+INSERT INTO `sys_operation_log` VALUES (2064354769046261762, 1, 'admin', '用户登出', 'POST', '/auth/logout', '127.0.0.1', '2026-06-09 22:31:45');
 
 -- ----------------------------
 -- Table structure for sys_role_menu
@@ -2631,7 +2686,7 @@ CREATE TABLE `sys_role_menu`  (
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `menu_id` bigint NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 69 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 71 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -2700,6 +2755,8 @@ INSERT INTO `sys_role_menu` VALUES (65, 'CS', 24);
 INSERT INTO `sys_role_menu` VALUES (66, 'CS', 25);
 INSERT INTO `sys_role_menu` VALUES (67, 'CS', 26);
 INSERT INTO `sys_role_menu` VALUES (68, 'BUYER', 1);
+INSERT INTO `sys_role_menu` VALUES (69, 'SUPER_ADMIN', 33);
+INSERT INTO `sys_role_menu` VALUES (70, 'OPERATOR', 33);
 
 -- ----------------------------
 -- Table structure for sys_user

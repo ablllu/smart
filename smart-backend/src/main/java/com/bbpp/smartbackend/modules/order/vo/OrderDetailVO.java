@@ -49,6 +49,8 @@ public class OrderDetailVO {
 
         private Long id;
 
+        private Long spuId;
+
         private String spuName;
 
         private String skuName;

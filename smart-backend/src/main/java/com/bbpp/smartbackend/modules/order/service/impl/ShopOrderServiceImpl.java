@@ -108,6 +108,9 @@ public class ShopOrderServiceImpl implements ShopOrderService {
             order.setPayAmount(BigDecimal.ZERO);
             order.setStatus(0);  // 待付款
             order.setCreateTime(LocalDateTime.now());
+
+
+
             orderMapper.insert(order);
 
             for (Cart cart : carts) {
@@ -160,6 +163,8 @@ public class ShopOrderServiceImpl implements ShopOrderService {
             String orderNo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
                     + String.format("%010d", System.currentTimeMillis() % 10000000000L);
 
+            Spu spu = spuMapper.selectById(dto.getSpuId());
+
             Order order = new Order();
             order.setOrderNo(orderNo);
             order.setMemberId(memberId);
@@ -167,6 +172,7 @@ public class ShopOrderServiceImpl implements ShopOrderService {
             order.setPayAmount(sku.getPrice().multiply(BigDecimal.valueOf(qty)));
             order.setStatus(0);
             order.setCreateTime(LocalDateTime.now());
+       
             orderMapper.insert(order);
 
             OrderItem item = new OrderItem();
@@ -178,8 +184,6 @@ public class ShopOrderServiceImpl implements ShopOrderService {
             item.setQuantity(qty);
             item.setTotalAmount(sku.getPrice().multiply(BigDecimal.valueOf(qty)));
             item.setSkuName(sku.getSkuName());
-
-            Spu spu = spuMapper.selectById(dto.getSpuId());
             item.setSpuName(spu != null ? spu.getName() : "");
             orderItemMapper.insert(item);
 

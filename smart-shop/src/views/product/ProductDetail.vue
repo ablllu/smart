@@ -55,6 +55,20 @@
           <h3>商品详情</h3>
           <div v-html="product.description" />
         </div>
+
+        <!-- 评价区 -->
+        <div class="review-box">
+          <h3>商品评价（{{ reviewTotal }}）</h3>
+          <div v-if="reviewLoading" style="text-align:center;padding:20px">加载中...</div>
+          <el-empty v-else-if="reviews.length === 0" description="暂无评价" :image-size="60" />
+          <div v-for="r in reviews" :key="r.id" class="review-item">
+            <div class="review-header">
+              <el-rate :model-value="r.rating" disabled show-score size="small" />
+              <span class="review-time">{{ r.createTime }}</span>
+            </div>
+            <p class="review-content" v-if="r.content">{{ r.content }}</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -69,12 +83,17 @@ import { ElMessage } from 'element-plus'
 import * as productApi from '../../api/product'
 import * as cartApi from '../../api/cart'
 import * as orderApi from '../../api/order'
+import * as reviewApi from '../../api/review'
+
 const router = useRouter()
 const route = useRoute()
 const product = ref<any>(null)
 const currentSku = ref<any>(null)
 const currentImage = ref('')
 const loading = ref(false)
+const reviews = ref<any[]>([])
+const reviewTotal = ref(0)
+const reviewLoading = ref(false)
 
 onMounted(async () => {
   loading.value = true
@@ -85,10 +104,22 @@ onMounted(async () => {
       currentSku.value = product.value.skus[0]
     }
     currentImage.value = product.value.mainImage || (product.value.images?.[0] ?? '')
+    fetchReviews()
   } finally {
     loading.value = false
   }
 })
+
+async function fetchReviews() {
+  reviewLoading.value = true
+  try {
+    const res = await reviewApi.getPage(product.value.id)
+    reviews.value = res.records
+    reviewTotal.value = res.total
+  } finally {
+    reviewLoading.value = false
+  }
+}
 
 async function buyNow() {
   if (!currentSku.value) {
@@ -120,7 +151,6 @@ async function addToCart() {
   })
   ElMessage.success('已加入购物车')
 }
-
 </script>
 
 <style scoped>
@@ -159,4 +189,11 @@ async function addToCart() {
 
 .desc-box { border-top: 1px solid #eee; padding-top: 24px; }
 .desc-box h3 { font-size: 16px; margin: 0 0 12px; color: #333; }
+
+.review-box { border-top: 1px solid #eee; padding-top: 24px; margin-top: 24px; }
+.review-box h3 { font-size: 16px; margin: 0 0 16px; color: #333; }
+.review-item { padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
+.review-header { display: flex; justify-content: space-between; align-items: center; }
+.review-time { font-size: 12px; color: #bbb; }
+.review-content { font-size: 14px; color: #555; margin: 8px 0 0; line-height: 1.6; }
 </style>

@@ -22,6 +22,8 @@ import com.bbpp.smartbackend.modules.product.entity.Spu;
 import com.bbpp.smartbackend.modules.product.mapper.CategoryMapper;
 import com.bbpp.smartbackend.modules.product.mapper.SkuMapper;
 import com.bbpp.smartbackend.modules.product.mapper.SpuMapper;
+import com.bbpp.smartbackend.modules.merchant.service.MerchantShopService;
+import com.bbpp.smartbackend.modules.merchant.vo.MerchantShopVO;
 import com.bbpp.smartbackend.modules.product.service.SpuService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,12 +44,14 @@ public class SpuServiceImpl implements SpuService {
     private final ObjectMapper objectMapper= new ObjectMapper();
     // 依赖categoryService
     private final CategoryService categoryService;
+    private final MerchantShopService merchantShopService;
 
-    public SpuServiceImpl(SpuMapper spuMapper, SkuMapper skuMapper, CategoryMapper categoryMapper, CategoryService categoryService) {
+    public SpuServiceImpl(SpuMapper spuMapper, SkuMapper skuMapper, CategoryMapper categoryMapper, CategoryService categoryService, MerchantShopService merchantShopService) {
         this.spuMapper = spuMapper;
         this.skuMapper = skuMapper;
         this.categoryMapper = categoryMapper;
         this.categoryService = categoryService;
+        this.merchantShopService = merchantShopService;
     }
 
     @Override
@@ -178,6 +182,10 @@ public class SpuServiceImpl implements SpuService {
         // MERCHANT 创建的商品绑定当前商家
         LoginUser loginUser = UserContext.get();
         if (loginUser != null && RoleEnum.MERCHANT.name().equals(loginUser.getRole())) {
+            MerchantShopVO shop = merchantShopService.getByUserId(loginUser.getUserId());
+            if (shop == null || shop.getStatus() != 1) {
+                throw new BusinessException("请先创建并启用店铺后再发布商品");
+            }
             spu.setMerchantId(loginUser.getUserId());
         }
 

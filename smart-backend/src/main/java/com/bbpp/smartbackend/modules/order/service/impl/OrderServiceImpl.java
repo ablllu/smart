@@ -16,6 +16,8 @@ import com.bbpp.smartbackend.modules.order.mapper.OrderMapper;
 import com.bbpp.smartbackend.modules.order.service.OrderService;
 import com.bbpp.smartbackend.modules.order.vo.OrderDetailVO;
 import com.bbpp.smartbackend.modules.order.vo.OrderVO;
+import com.bbpp.smartbackend.modules.product.entity.Spu;
+import com.bbpp.smartbackend.modules.product.mapper.SpuMapper;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -31,10 +33,13 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderMapper orderMapper;
     private OrderItemMapper orderItemMapper;
+    private SpuMapper spuMapper;
 
-    public OrderServiceImpl(OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
+    public OrderServiceImpl(OrderMapper orderMapper, OrderItemMapper orderItemMapper,
+                            SpuMapper spuMapper) {
         this.orderMapper = orderMapper;
         this.orderItemMapper = orderItemMapper;
+        this.spuMapper = spuMapper;
     }
 
     @Override
@@ -76,16 +81,66 @@ public class OrderServiceImpl implements OrderService {
 
         wrapper.orderByDesc(Order::getCreateTime);
 
-        // MERCHANT 只能看自己的订单
+        // MERCHANT 只能看自己商品的订单（通过 order_item → spu 关联）
         LoginUser loginUser = UserContext.get();
+        List<Long> spuIds = null;
         if (loginUser != null && RoleEnum.MERCHANT.name().equals(loginUser.getRole())) {
-            wrapper.eq(Order::getMerchantId, loginUser.getUserId());
+            spuIds = spuMapper.selectList(
+                new LambdaQueryWrapper<Spu>()
+                    .eq(Spu::getMerchantId, loginUser.getUserId())
+                    .select(Spu::getId)
+            ).stream().map(Spu::getId).collect(Collectors.toList());
+
+            List<Long> orderIds;
+            if (spuIds.isEmpty()) {
+                orderIds = java.util.Collections.emptyList();
+            } else {
+                orderIds = orderItemMapper.selectList(
+                    new LambdaQueryWrapper<OrderItem>()
+                        .in(OrderItem::getSpuId, spuIds)
+                        .select(OrderItem::getOrderId)
+                ).stream().map(OrderItem::getOrderId).distinct().collect(Collectors.toList());
+            }
+
+            if (orderIds.isEmpty()) {
+                return new PageResult<>(0L, java.util.Collections.emptyList());
+            }
+            wrapper.in(Order::getId, orderIds);
         }
 
         // 查询
         Page<Order> result = orderMapper.selectPage(page, wrapper);
 
-        List<OrderVO> records = result.getRecords().stream().map(this::toVO).collect(Collectors.toList());
+        List<OrderVO> records;
+        if (loginUser != null && RoleEnum.MERCHANT.name().equals(loginUser.getRole())) {
+            // MERCHANT：金额只算自己商品的部分
+            List<Long> resultOrderIds = result.getRecords().stream()
+                .map(Order::getId).collect(Collectors.toList());
+
+            java.util.Map<Long, java.math.BigDecimal> merchantTotals = new java.util.HashMap<>();
+            if (!resultOrderIds.isEmpty()) {
+                List<OrderItem> items = orderItemMapper.selectList(
+                    new LambdaQueryWrapper<OrderItem>()
+                        .in(OrderItem::getOrderId, resultOrderIds)
+                        .in(OrderItem::getSpuId, spuIds)
+                );
+                for (OrderItem item : items) {
+                    merchantTotals.merge(item.getOrderId(), item.getTotalAmount(), java.math.BigDecimal::add);
+                }
+            }
+
+            records = new java.util.ArrayList<>();
+            for (Order order : result.getRecords()) {
+                OrderVO vo = new OrderVO();
+                BeanUtils.copyProperties(order, vo);
+                java.math.BigDecimal amount = merchantTotals.getOrDefault(order.getId(), java.math.BigDecimal.ZERO);
+                vo.setPayAmount(amount);
+                vo.setTotalAmount(amount);
+                records.add(vo);
+            }
+        } else {
+            records = result.getRecords().stream().map(this::toVO).collect(Collectors.toList());
+        }
 
         return new PageResult<>(result.getTotal(), records);
     }
@@ -116,6 +171,19 @@ public class OrderServiceImpl implements OrderService {
             return itemVO;
         }).collect(Collectors.toList());
 
+        // MERCHANT 只看自己的商品明细
+        LoginUser loginUser = UserContext.get();
+        if (loginUser != null && RoleEnum.MERCHANT.name().equals(loginUser.getRole())) {
+            List<Long> spuIds = spuMapper.selectList(
+                new LambdaQueryWrapper<Spu>()
+                    .eq(Spu::getMerchantId, loginUser.getUserId())
+                    .select(Spu::getId)
+            ).stream().map(Spu::getId).collect(Collectors.toList());
+            itemVOS = itemVOS.stream()
+                .filter(item -> spuIds.contains(item.getSpuId()))
+                .collect(Collectors.toList());
+        }
+
         vo.setItems(itemVOS);
         return vo;
     }
@@ -129,11 +197,21 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(404, "订单不存在");
         }
 
-        // MERCHANT 只能发自己的订单
+        // MERCHANT 只能发自己商品的订单
         LoginUser loginUser = UserContext.get();
         if (loginUser != null && RoleEnum.MERCHANT.name().equals(loginUser.getRole())) {
-            if (!loginUser.getUserId().equals(order.getMerchantId())) {
-                throw new BusinessException(403, "只能操作自己的订单");
+            List<Long> spuIds = spuMapper.selectList(
+                new LambdaQueryWrapper<Spu>()
+                    .eq(Spu::getMerchantId, loginUser.getUserId())
+                    .select(Spu::getId)
+            ).stream().map(Spu::getId).collect(Collectors.toList());
+            Long count = orderItemMapper.selectCount(
+                new LambdaQueryWrapper<OrderItem>()
+                    .eq(OrderItem::getOrderId, id)
+                    .in(OrderItem::getSpuId, spuIds)
+            );
+            if (count == 0) {
+                throw new BusinessException(403, "该订单不包含您的商品");
             }
         }
 
