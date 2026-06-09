@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import * as shopApi from '@/api/merchant-shop'
+import * as shopApi from '../../api/merchant-shop'
 
 const list = ref<any[]>([])
 const total = ref(0)
