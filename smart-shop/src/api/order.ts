@@ -26,6 +26,10 @@ export function pay(id: number) {
   return request({ url: `/api/order/${id}/pay`, method: 'put' })
 }
 
+export function payCreate(orderId: number) {
+  return request({ url: `/api/pay/create/${orderId}`, method: 'post' })
+}
+
 export function cancel(id: number) {
   return request({ url: `/api/order/${id}/cancel`, method: 'put' })
 }

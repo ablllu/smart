@@ -139,9 +139,16 @@ async function showDetail(id: number) {
 }
 
 async function handlePay(id: number) {
-  await orderApi.pay(id)
-  ElMessage.success('支付成功')
-  fetchData()
+  try {
+    const { html } = await orderApi.payCreate(id)
+    const win = window.open('', '_blank')
+    if (win) {
+      win.document.write(html)
+      win.document.close()
+    }
+  } catch {
+    ElMessage.error('创建支付失败')
+  }
 }
 
 async function handleCancel(id: number) {
