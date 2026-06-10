@@ -1,6 +1,13 @@
 # 构建阶段
 FROM maven:3.8-openjdk-8 AS builder
 WORKDIR /build
+# 阿里云 Maven 镜像（加速国内下载）
+RUN echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0">\
+  <mirrors>\
+    <mirror><id>aliyun</id><mirrorOf>central</mirrorOf>\
+    <name>Aliyun Maven</name><url>https://maven.aliyun.com/repository/public</url></mirror>\
+  </mirrors>\
+</settings>' > /root/.m2/settings.xml
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 COPY src ./src
